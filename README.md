@@ -22,6 +22,9 @@
    cmake ..
    make
    ```
+3.5 환경변수 설정
+- export "GRPC_TARGET"=(대상 ip):50051
+- (선택) export "GRPC_PORT"=(로컬 ip):(원하는 포트)
 4. 실행
     ```./AipexFW```
 
@@ -29,4 +32,5 @@
 - `includes` : 헤더 파일
 - `src` : 소스 파일
 - `protos` : Protocol Buffers 정의 파일
+
 
