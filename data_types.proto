@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package data_types;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+message CameraFrame {
+    bytes image_data = 1;
+    uint32 width = 2;
+    uint32 height = 3;
+    google.protobuf.Timestamp timestamp = 4;
+    string format = 5;
+}
+
+message BoundingBox {
+    uint32 x_min = 1;
+    uint32 y_min = 2;
+    uint32 x_max = 3;
+    uint32 y_max = 4;
+    string label = 5;
+    float confidence = 6;
+}
+
+message DetectionResult {
+    google.protobuf.Timestamp frame_timestamp = 1;
+    repeated BoundingBox detections = 2;
+}
+
+message DeviceStatus {
+    enum ConnectionState {
+        DISCONNECTED = 0;
+        BLE_PAIRING = 1;
+        WLAN_CONNECTED = 2;
+        GRPC_READY = 3;
+    }
+
+    string device_id = 1;
+    ConnectionState state = 2;
+    float cpu_temperature_c = 3;
+    uint32 frame_rate_fps = 4;
+    uint32 processing_latency_ms = 5;
+    string firmware_version = 6;
+    bool is_sleeping = 7;
+}
+
+message Command {
+    oneof command_type {
+        ConfigRequest config_request = 1;
+        ControlAction control_action = 2;
+        Heartbeat heartbeat = 3;
+    }
+}
+
+message ConfigRequest {
+    google.protobuf.FloatValue detection_threshold = 1;
+    google.protobuf.UInt32Value sleep_timeout_sec = 2;
+}
+
+message ControlAction {
+    enum ActionType {
+        REBOOT = 0;
+        START_STREAMING = 1;
+        STOP_STREAMING = 2;
+    }
+    ActionType action = 1;
+}
+
+message Heartbeat {
+    google.protobuf.Timestamp timestamp = 1;
+}
+
+message ServerMessage {
+    oneof message_type {
+        CameraFrame camera_frame = 1;
+        DetectionResult detection_result = 2;
+        DeviceStatus device_status = 3;
+        ConfigResponse config_response = 4;
+    }
+}
+
+message ClientMessage {
+    oneof message_type {
+        DeviceStatus device_status = 1;
+        ConfigResponse config_response = 2;
+    }
+}
+
+message ConfigResponse {
+    bool success = 1;
+    string message = 2;
+}
