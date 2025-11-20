@@ -1,0 +1,63 @@
+# Build artifacts
+*.o
+*.obj
+*.exe
+*.dll
+*.lib
+*.so
+*.a
+*.out
+*.bin
+*.ilk
+*.pdb
+*.exp
+*.idb
+
+# Temporary files
+*~
+*.bak
+*.swp
+*.tmp
+
+# IDE specific files
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.suo
+*.user
+*.ncb
+*.aps
+*.bsc
+*.sbr
+ipch/
+*.VC.db
+*.VC.opendb
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+CTestTestfile.cmake
+_CPack_Packages/
+build/
+
+# Qt Creator
+*.pro.user
+*.qrc_*.cpp
+*.qml_*.cpp
+
+# Eclipse
+.project
+.cproject
+.settings/
+
+# macOS
+.DS_Store
+
+# Linux
+*.core
+
+# User-specific files
+# Add any other files or directories that are specific to your local setup
+# and should not be committed to the repository.

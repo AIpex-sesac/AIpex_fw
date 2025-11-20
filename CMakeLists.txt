@@ -16,6 +16,11 @@ endif()
 
 find_package(Protobuf REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
+# find_package(HailoRT REQUIRED) # HailoRT는 arm64 지원, amd64 미지원
+find_package(Threads)
+find_package(OpenCV REQUIRED)
+
+message(STATUS "Found OpenCV: " ${OpenCV_INCLUDE_DIRS})
 
 if(TARGET protobuf::libprotobuf)
   set(PROTOBUF_LIB_TARGET protobuf::libprotobuf)
@@ -39,6 +44,11 @@ set(SRC_FILES
   generated/ComputeService.pb.cc
   generated/ComputeService.grpc.pb.cc
   generated/data_types.pb.cc
+  src/config.cpp
+  src/hailo_infer.cpp
+  src/hailo_toolbox.cpp
+  src/hailo_utils.cpp
+  src/hailo_object_detection.cpp
 )
 
 add_executable(AipexFW ${SRC_FILES})
@@ -49,6 +59,10 @@ target_link_libraries(AipexFW
     ${PROTOBUF_LIB_TARGET}
     pthread
     dl
+    ${OpenCV_LIBS}
+#    HailoRT::HailoRT # HailoRT는 arm64 지원, amd64 미지원
 )
+
+link_libraries(stdc++fs)
 
 install(TARGETS AipexFW DESTINATION bin)
