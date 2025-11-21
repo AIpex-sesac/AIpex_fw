@@ -16,8 +16,8 @@ endif()
 
 find_package(Protobuf REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
-# find_package(HailoRT REQUIRED) # HailoRT는 arm64 지원, amd64 미지원
-find_package(Threads)
+find_package(Threads REQUIRED)
+find_package(HailoRT REQUIRED) # HailoRT는 arm64 지원, amd64 미지원
 find_package(OpenCV REQUIRED)
 
 message(STATUS "Found OpenCV: " ${OpenCV_INCLUDE_DIRS})
@@ -37,7 +37,6 @@ set(SRC_FILES
   src/main.cpp
   src/grpc_server.cpp
   src/grpc_client.cpp
-  src/hailo.cpp
   src/power_control.cpp
   src/init.cpp
   src/service_impl.cpp
@@ -45,24 +44,21 @@ set(SRC_FILES
   generated/ComputeService.grpc.pb.cc
   generated/data_types.pb.cc
   src/config.cpp
-  src/hailo_infer.cpp
-  src/hailo_toolbox.cpp
-  src/hailo_utils.cpp
   src/hailo_object_detection.cpp
 )
 
-add_executable(AipexFW ${SRC_FILES})
+add_executable(Aipex ${SRC_FILES})
 
-target_link_libraries(AipexFW
+target_link_libraries(Aipex
   PRIVATE
     gRPC::grpc++
     ${PROTOBUF_LIB_TARGET}
     pthread
     dl
     ${OpenCV_LIBS}
-#    HailoRT::HailoRT # HailoRT는 arm64 지원, amd64 미지원
+    HailoRT::libhailort # HailoRT는 arm64 지원, amd64 미지원
 )
 
 link_libraries(stdc++fs)
 
-install(TARGETS AipexFW DESTINATION bin)
+install(TARGETS Aipex DESTINATION bin)

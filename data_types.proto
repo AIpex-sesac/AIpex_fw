@@ -24,7 +24,7 @@ message BoundingBox {
 
 message DetectionResult {
     google.protobuf.Timestamp frame_timestamp = 1;
-    repeated BoundingBox detections = 2;
+    string json = 2;
 }
 
 message DeviceStatus {
@@ -49,6 +49,8 @@ message Command {
         ConfigRequest config_request = 1;
         ControlAction control_action = 2;
         Heartbeat heartbeat = 3;
+        DetectionResult detection_result = 4;
+        CameraFrame camera_frame = 5; // NEW: client sends frame for inference
     }
 }
 

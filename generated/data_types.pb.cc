@@ -14,12 +14,11 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
-extern PROTOBUF_INTERNAL_EXPORT_data_5ftypes_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_BoundingBox_data_5ftypes_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_data_5ftypes_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_CameraFrame_data_5ftypes_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_data_5ftypes_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_ConfigRequest_data_5ftypes_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_data_5ftypes_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_ConfigResponse_data_5ftypes_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_data_5ftypes_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_ControlAction_data_5ftypes_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_data_5ftypes_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_DetectionResult_data_5ftypes_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_data_5ftypes_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_DetectionResult_data_5ftypes_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_data_5ftypes_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_DeviceStatus_data_5ftypes_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_data_5ftypes_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Heartbeat_data_5ftypes_2eproto;
 extern PROTOBUF_INTERNAL_EXPORT_google_2fprotobuf_2fwrappers_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_FloatValue_google_2fprotobuf_2fwrappers_2eproto;
@@ -48,6 +47,8 @@ class CommandDefaultTypeInternal {
   const ::data_types::ConfigRequest* config_request_;
   const ::data_types::ControlAction* control_action_;
   const ::data_types::Heartbeat* heartbeat_;
+  const ::data_types::DetectionResult* detection_result_;
+  const ::data_types::CameraFrame* camera_frame_;
 } _Command_default_instance_;
 class ConfigRequestDefaultTypeInternal {
  public:
@@ -136,11 +137,13 @@ static void InitDefaultsscc_info_Command_data_5ftypes_2eproto() {
   ::data_types::Command::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<3> scc_info_Command_data_5ftypes_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 3, 0, InitDefaultsscc_info_Command_data_5ftypes_2eproto}, {
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<5> scc_info_Command_data_5ftypes_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 5, 0, InitDefaultsscc_info_Command_data_5ftypes_2eproto}, {
       &scc_info_ConfigRequest_data_5ftypes_2eproto.base,
       &scc_info_ControlAction_data_5ftypes_2eproto.base,
-      &scc_info_Heartbeat_data_5ftypes_2eproto.base,}};
+      &scc_info_Heartbeat_data_5ftypes_2eproto.base,
+      &scc_info_DetectionResult_data_5ftypes_2eproto.base,
+      &scc_info_CameraFrame_data_5ftypes_2eproto.base,}};
 
 static void InitDefaultsscc_info_ConfigRequest_data_5ftypes_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -197,10 +200,9 @@ static void InitDefaultsscc_info_DetectionResult_data_5ftypes_2eproto() {
   ::data_types::DetectionResult::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_DetectionResult_data_5ftypes_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 2, 0, InitDefaultsscc_info_DetectionResult_data_5ftypes_2eproto}, {
-      &scc_info_Timestamp_google_2fprotobuf_2ftimestamp_2eproto.base,
-      &scc_info_BoundingBox_data_5ftypes_2eproto.base,}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_DetectionResult_data_5ftypes_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_DetectionResult_data_5ftypes_2eproto}, {
+      &scc_info_Timestamp_google_2fprotobuf_2ftimestamp_2eproto.base,}};
 
 static void InitDefaultsscc_info_DeviceStatus_data_5ftypes_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -281,7 +283,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_data_5ftypes_2eproto::offsets[
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::data_types::DetectionResult, frame_timestamp_),
-  PROTOBUF_FIELD_OFFSET(::data_types::DetectionResult, detections_),
+  PROTOBUF_FIELD_OFFSET(::data_types::DetectionResult, json_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::data_types::DeviceStatus, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -302,6 +304,8 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_data_5ftypes_2eproto::offsets[
   offsetof(::data_types::CommandDefaultTypeInternal, config_request_),
   offsetof(::data_types::CommandDefaultTypeInternal, control_action_),
   offsetof(::data_types::CommandDefaultTypeInternal, heartbeat_),
+  offsetof(::data_types::CommandDefaultTypeInternal, detection_result_),
+  offsetof(::data_types::CommandDefaultTypeInternal, camera_frame_),
   PROTOBUF_FIELD_OFFSET(::data_types::Command, command_type_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::data_types::ConfigRequest, _internal_metadata_),
@@ -354,12 +358,12 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 21, -1, sizeof(::data_types::DetectionResult)},
   { 28, -1, sizeof(::data_types::DeviceStatus)},
   { 40, -1, sizeof(::data_types::Command)},
-  { 49, -1, sizeof(::data_types::ConfigRequest)},
-  { 56, -1, sizeof(::data_types::ControlAction)},
-  { 62, -1, sizeof(::data_types::Heartbeat)},
-  { 68, -1, sizeof(::data_types::ServerMessage)},
-  { 78, -1, sizeof(::data_types::ClientMessage)},
-  { 86, -1, sizeof(::data_types::ConfigResponse)},
+  { 51, -1, sizeof(::data_types::ConfigRequest)},
+  { 58, -1, sizeof(::data_types::ControlAction)},
+  { 64, -1, sizeof(::data_types::Heartbeat)},
+  { 70, -1, sizeof(::data_types::ServerMessage)},
+  { 80, -1, sizeof(::data_types::ClientMessage)},
+  { 88, -1, sizeof(::data_types::ConfigResponse)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -385,41 +389,43 @@ const char descriptor_table_protodef_data_5ftypes_2eproto[] PROTOBUF_SECTION_VAR
   "imestamp\022\016\n\006format\030\005 \001(\t\"l\n\013BoundingBox\022"
   "\r\n\005x_min\030\001 \001(\r\022\r\n\005y_min\030\002 \001(\r\022\r\n\005x_max\030\003"
   " \001(\r\022\r\n\005y_max\030\004 \001(\r\022\r\n\005label\030\005 \001(\t\022\022\n\nco"
-  "nfidence\030\006 \001(\002\"s\n\017DetectionResult\0223\n\017fra"
+  "nfidence\030\006 \001(\002\"T\n\017DetectionResult\0223\n\017fra"
   "me_timestamp\030\001 \001(\0132\032.google.protobuf.Tim"
-  "estamp\022+\n\ndetections\030\002 \003(\0132\027.data_types."
-  "BoundingBox\"\265\002\n\014DeviceStatus\022\021\n\tdevice_i"
-  "d\030\001 \001(\t\0227\n\005state\030\002 \001(\0162(.data_types.Devi"
-  "ceStatus.ConnectionState\022\031\n\021cpu_temperat"
-  "ure_c\030\003 \001(\002\022\026\n\016frame_rate_fps\030\004 \001(\r\022\035\n\025p"
-  "rocessing_latency_ms\030\005 \001(\r\022\030\n\020firmware_v"
-  "ersion\030\006 \001(\t\022\023\n\013is_sleeping\030\007 \001(\010\"X\n\017Con"
-  "nectionState\022\020\n\014DISCONNECTED\020\000\022\017\n\013BLE_PA"
-  "IRING\020\001\022\022\n\016WLAN_CONNECTED\020\002\022\016\n\nGRPC_READ"
-  "Y\020\003\"\257\001\n\007Command\0223\n\016config_request\030\001 \001(\0132"
-  "\031.data_types.ConfigRequestH\000\0223\n\016control_"
-  "action\030\002 \001(\0132\031.data_types.ControlActionH"
-  "\000\022*\n\theartbeat\030\003 \001(\0132\025.data_types.Heartb"
-  "eatH\000B\016\n\014command_type\"\202\001\n\rConfigRequest\022"
-  "8\n\023detection_threshold\030\001 \001(\0132\033.google.pr"
-  "otobuf.FloatValue\0227\n\021sleep_timeout_sec\030\002"
-  " \001(\0132\034.google.protobuf.UInt32Value\"\210\001\n\rC"
-  "ontrolAction\0224\n\006action\030\001 \001(\0162$.data_type"
-  "s.ControlAction.ActionType\"A\n\nActionType"
-  "\022\n\n\006REBOOT\020\000\022\023\n\017START_STREAMING\020\001\022\022\n\016STO"
-  "P_STREAMING\020\002\":\n\tHeartbeat\022-\n\ttimestamp\030"
-  "\001 \001(\0132\032.google.protobuf.Timestamp\"\363\001\n\rSe"
-  "rverMessage\022/\n\014camera_frame\030\001 \001(\0132\027.data"
-  "_types.CameraFrameH\000\0227\n\020detection_result"
-  "\030\002 \001(\0132\033.data_types.DetectionResultH\000\0221\n"
-  "\rdevice_status\030\003 \001(\0132\030.data_types.Device"
-  "StatusH\000\0225\n\017config_response\030\004 \001(\0132\032.data"
-  "_types.ConfigResponseH\000B\016\n\014message_type\""
-  "\211\001\n\rClientMessage\0221\n\rdevice_status\030\001 \001(\013"
-  "2\030.data_types.DeviceStatusH\000\0225\n\017config_r"
-  "esponse\030\002 \001(\0132\032.data_types.ConfigRespons"
-  "eH\000B\016\n\014message_type\"2\n\016ConfigResponse\022\017\n"
-  "\007success\030\001 \001(\010\022\017\n\007message\030\002 \001(\tb\006proto3"
+  "estamp\022\014\n\004json\030\002 \001(\t\"\265\002\n\014DeviceStatus\022\021\n"
+  "\tdevice_id\030\001 \001(\t\0227\n\005state\030\002 \001(\0162(.data_t"
+  "ypes.DeviceStatus.ConnectionState\022\031\n\021cpu"
+  "_temperature_c\030\003 \001(\002\022\026\n\016frame_rate_fps\030\004"
+  " \001(\r\022\035\n\025processing_latency_ms\030\005 \001(\r\022\030\n\020f"
+  "irmware_version\030\006 \001(\t\022\023\n\013is_sleeping\030\007 \001"
+  "(\010\"X\n\017ConnectionState\022\020\n\014DISCONNECTED\020\000\022"
+  "\017\n\013BLE_PAIRING\020\001\022\022\n\016WLAN_CONNECTED\020\002\022\016\n\n"
+  "GRPC_READY\020\003\"\231\002\n\007Command\0223\n\016config_reque"
+  "st\030\001 \001(\0132\031.data_types.ConfigRequestH\000\0223\n"
+  "\016control_action\030\002 \001(\0132\031.data_types.Contr"
+  "olActionH\000\022*\n\theartbeat\030\003 \001(\0132\025.data_typ"
+  "es.HeartbeatH\000\0227\n\020detection_result\030\004 \001(\013"
+  "2\033.data_types.DetectionResultH\000\022/\n\014camer"
+  "a_frame\030\005 \001(\0132\027.data_types.CameraFrameH\000"
+  "B\016\n\014command_type\"\202\001\n\rConfigRequest\0228\n\023de"
+  "tection_threshold\030\001 \001(\0132\033.google.protobu"
+  "f.FloatValue\0227\n\021sleep_timeout_sec\030\002 \001(\0132"
+  "\034.google.protobuf.UInt32Value\"\210\001\n\rContro"
+  "lAction\0224\n\006action\030\001 \001(\0162$.data_types.Con"
+  "trolAction.ActionType\"A\n\nActionType\022\n\n\006R"
+  "EBOOT\020\000\022\023\n\017START_STREAMING\020\001\022\022\n\016STOP_STR"
+  "EAMING\020\002\":\n\tHeartbeat\022-\n\ttimestamp\030\001 \001(\013"
+  "2\032.google.protobuf.Timestamp\"\363\001\n\rServerM"
+  "essage\022/\n\014camera_frame\030\001 \001(\0132\027.data_type"
+  "s.CameraFrameH\000\0227\n\020detection_result\030\002 \001("
+  "\0132\033.data_types.DetectionResultH\000\0221\n\rdevi"
+  "ce_status\030\003 \001(\0132\030.data_types.DeviceStatu"
+  "sH\000\0225\n\017config_response\030\004 \001(\0132\032.data_type"
+  "s.ConfigResponseH\000B\016\n\014message_type\"\211\001\n\rC"
+  "lientMessage\0221\n\rdevice_status\030\001 \001(\0132\030.da"
+  "ta_types.DeviceStatusH\000\0225\n\017config_respon"
+  "se\030\002 \001(\0132\032.data_types.ConfigResponseH\000B\016"
+  "\n\014message_type\"2\n\016ConfigResponse\022\017\n\007succ"
+  "ess\030\001 \001(\010\022\017\n\007message\030\002 \001(\tb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_data_5ftypes_2eproto_deps[2] = {
   &::descriptor_table_google_2fprotobuf_2ftimestamp_2eproto,
@@ -441,7 +447,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_dat
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_data_5ftypes_2eproto_once;
 static bool descriptor_table_data_5ftypes_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_data_5ftypes_2eproto = {
-  &descriptor_table_data_5ftypes_2eproto_initialized, descriptor_table_protodef_data_5ftypes_2eproto, "data_types.proto", 1719,
+  &descriptor_table_data_5ftypes_2eproto_initialized, descriptor_table_protodef_data_5ftypes_2eproto, "data_types.proto", 1794,
   &descriptor_table_data_5ftypes_2eproto_once, descriptor_table_data_5ftypes_2eproto_sccs, descriptor_table_data_5ftypes_2eproto_deps, 11, 2,
   schemas, file_default_instances, TableStruct_data_5ftypes_2eproto::offsets,
   file_level_metadata_data_5ftypes_2eproto, 11, file_level_enum_descriptors_data_5ftypes_2eproto, file_level_service_descriptors_data_5ftypes_2eproto,
@@ -1192,9 +1198,12 @@ DetectionResult::DetectionResult()
 }
 DetectionResult::DetectionResult(const DetectionResult& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _internal_metadata_(nullptr),
-      detections_(from.detections_) {
+      _internal_metadata_(nullptr) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  json_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_json().empty()) {
+    json_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.json_);
+  }
   if (from._internal_has_frame_timestamp()) {
     frame_timestamp_ = new PROTOBUF_NAMESPACE_ID::Timestamp(*from.frame_timestamp_);
   } else {
@@ -1205,6 +1214,7 @@ DetectionResult::DetectionResult(const DetectionResult& from)
 
 void DetectionResult::SharedCtor() {
   ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_DetectionResult_data_5ftypes_2eproto.base);
+  json_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   frame_timestamp_ = nullptr;
 }
 
@@ -1214,6 +1224,7 @@ DetectionResult::~DetectionResult() {
 }
 
 void DetectionResult::SharedDtor() {
+  json_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) delete frame_timestamp_;
 }
 
@@ -1232,7 +1243,7 @@ void DetectionResult::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  detections_.Clear();
+  json_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   if (GetArenaNoVirtual() == nullptr && frame_timestamp_ != nullptr) {
     delete frame_timestamp_;
   }
@@ -1254,16 +1265,13 @@ const char* DetectionResult::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // repeated .data_types.BoundingBox detections = 2;
+      // string json = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            ptr = ctx->ParseMessage(_internal_add_detections(), ptr);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
+          auto str = _internal_mutable_json();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "data_types.DetectionResult.json"));
+          CHK_(ptr);
         } else goto handle_unusual;
         continue;
       default: {
@@ -1300,12 +1308,14 @@ failure:
         1, _Internal::frame_timestamp(this), target, stream);
   }
 
-  // repeated .data_types.BoundingBox detections = 2;
-  for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->_internal_detections_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(2, this->_internal_detections(i), target, stream);
+  // string json = 2;
+  if (this->json().size() > 0) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_json().data(), static_cast<int>(this->_internal_json().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "data_types.DetectionResult.json");
+    target = stream->WriteStringMaybeAliased(
+        2, this->_internal_json(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1324,11 +1334,11 @@ size_t DetectionResult::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .data_types.BoundingBox detections = 2;
-  total_size += 1UL * this->_internal_detections_size();
-  for (const auto& msg : this->detections_) {
-    total_size +=
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  // string json = 2;
+  if (this->json().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_json());
   }
 
   // .google.protobuf.Timestamp frame_timestamp = 1;
@@ -1369,7 +1379,10 @@ void DetectionResult::MergeFrom(const DetectionResult& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  detections_.MergeFrom(from.detections_);
+  if (from.json().size() > 0) {
+
+    json_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.json_);
+  }
   if (from.has_frame_timestamp()) {
     _internal_mutable_frame_timestamp()->PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(from._internal_frame_timestamp());
   }
@@ -1396,7 +1409,8 @@ bool DetectionResult::IsInitialized() const {
 void DetectionResult::InternalSwap(DetectionResult* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  detections_.InternalSwap(&other->detections_);
+  json_.Swap(&other->json_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(frame_timestamp_, other->frame_timestamp_);
 }
 
@@ -1778,12 +1792,18 @@ void Command::InitAsDefaultInstance() {
       ::data_types::ControlAction::internal_default_instance());
   ::data_types::_Command_default_instance_.heartbeat_ = const_cast< ::data_types::Heartbeat*>(
       ::data_types::Heartbeat::internal_default_instance());
+  ::data_types::_Command_default_instance_.detection_result_ = const_cast< ::data_types::DetectionResult*>(
+      ::data_types::DetectionResult::internal_default_instance());
+  ::data_types::_Command_default_instance_.camera_frame_ = const_cast< ::data_types::CameraFrame*>(
+      ::data_types::CameraFrame::internal_default_instance());
 }
 class Command::_Internal {
  public:
   static const ::data_types::ConfigRequest& config_request(const Command* msg);
   static const ::data_types::ControlAction& control_action(const Command* msg);
   static const ::data_types::Heartbeat& heartbeat(const Command* msg);
+  static const ::data_types::DetectionResult& detection_result(const Command* msg);
+  static const ::data_types::CameraFrame& camera_frame(const Command* msg);
 };
 
 const ::data_types::ConfigRequest&
@@ -1797,6 +1817,14 @@ Command::_Internal::control_action(const Command* msg) {
 const ::data_types::Heartbeat&
 Command::_Internal::heartbeat(const Command* msg) {
   return *msg->command_type_.heartbeat_;
+}
+const ::data_types::DetectionResult&
+Command::_Internal::detection_result(const Command* msg) {
+  return *msg->command_type_.detection_result_;
+}
+const ::data_types::CameraFrame&
+Command::_Internal::camera_frame(const Command* msg) {
+  return *msg->command_type_.camera_frame_;
 }
 void Command::set_allocated_config_request(::data_types::ConfigRequest* config_request) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
@@ -1840,6 +1868,34 @@ void Command::set_allocated_heartbeat(::data_types::Heartbeat* heartbeat) {
   }
   // @@protoc_insertion_point(field_set_allocated:data_types.Command.heartbeat)
 }
+void Command::set_allocated_detection_result(::data_types::DetectionResult* detection_result) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  clear_command_type();
+  if (detection_result) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      detection_result = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, detection_result, submessage_arena);
+    }
+    set_has_detection_result();
+    command_type_.detection_result_ = detection_result;
+  }
+  // @@protoc_insertion_point(field_set_allocated:data_types.Command.detection_result)
+}
+void Command::set_allocated_camera_frame(::data_types::CameraFrame* camera_frame) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  clear_command_type();
+  if (camera_frame) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      camera_frame = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, camera_frame, submessage_arena);
+    }
+    set_has_camera_frame();
+    command_type_.camera_frame_ = camera_frame;
+  }
+  // @@protoc_insertion_point(field_set_allocated:data_types.Command.camera_frame)
+}
 Command::Command()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
@@ -1861,6 +1917,14 @@ Command::Command(const Command& from)
     }
     case kHeartbeat: {
       _internal_mutable_heartbeat()->::data_types::Heartbeat::MergeFrom(from._internal_heartbeat());
+      break;
+    }
+    case kDetectionResult: {
+      _internal_mutable_detection_result()->::data_types::DetectionResult::MergeFrom(from._internal_detection_result());
+      break;
+    }
+    case kCameraFrame: {
+      _internal_mutable_camera_frame()->::data_types::CameraFrame::MergeFrom(from._internal_camera_frame());
       break;
     }
     case COMMAND_TYPE_NOT_SET: {
@@ -1910,6 +1974,14 @@ void Command::clear_command_type() {
       delete command_type_.heartbeat_;
       break;
     }
+    case kDetectionResult: {
+      delete command_type_.detection_result_;
+      break;
+    }
+    case kCameraFrame: {
+      delete command_type_.camera_frame_;
+      break;
+    }
     case COMMAND_TYPE_NOT_SET: {
       break;
     }
@@ -1953,6 +2025,20 @@ const char* Command::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::in
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
           ptr = ctx->ParseMessage(_internal_mutable_heartbeat(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .data_types.DetectionResult detection_result = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
+          ptr = ctx->ParseMessage(_internal_mutable_detection_result(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .data_types.CameraFrame camera_frame = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+          ptr = ctx->ParseMessage(_internal_mutable_camera_frame(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -2006,6 +2092,22 @@ failure:
         3, _Internal::heartbeat(this), target, stream);
   }
 
+  // .data_types.DetectionResult detection_result = 4;
+  if (_internal_has_detection_result()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        4, _Internal::detection_result(this), target, stream);
+  }
+
+  // .data_types.CameraFrame camera_frame = 5;
+  if (_internal_has_camera_frame()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        5, _Internal::camera_frame(this), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
@@ -2042,6 +2144,20 @@ size_t Command::ByteSizeLong() const {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *command_type_.heartbeat_);
+      break;
+    }
+    // .data_types.DetectionResult detection_result = 4;
+    case kDetectionResult: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *command_type_.detection_result_);
+      break;
+    }
+    // .data_types.CameraFrame camera_frame = 5;
+    case kCameraFrame: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *command_type_.camera_frame_);
       break;
     }
     case COMMAND_TYPE_NOT_SET: {
@@ -2090,6 +2206,14 @@ void Command::MergeFrom(const Command& from) {
     }
     case kHeartbeat: {
       _internal_mutable_heartbeat()->::data_types::Heartbeat::MergeFrom(from._internal_heartbeat());
+      break;
+    }
+    case kDetectionResult: {
+      _internal_mutable_detection_result()->::data_types::DetectionResult::MergeFrom(from._internal_detection_result());
+      break;
+    }
+    case kCameraFrame: {
+      _internal_mutable_camera_frame()->::data_types::CameraFrame::MergeFrom(from._internal_camera_frame());
       break;
     }
     case COMMAND_TYPE_NOT_SET: {

@@ -1,6 +1,5 @@
 #include "grpc_server.h"
 #include "grpc_client.h"
-#include "hailo.h"
 #include "power_control.h"
 #include "init.h"
 #include <iostream>
@@ -15,6 +14,7 @@
 #include <cstdio>
 #include <memory>
 #include <array>
+#include <opencv2/opencv.hpp>
 
 static std::atomic<bool> g_terminate{false};
 static void signal_handler(int) { g_terminate.store(true); }
@@ -71,7 +71,6 @@ int main() {
     if (p && *p) addr = std::string("0.0.0.0:") + p;
 
     const char* t = std::getenv("GRPC_TARGET");
-    // 기본: mDNS로 광고한 서비스 이름(AipexFW.local)을 사용
     std::string default_target = std::string("AipexFW.local:") + (p && *p ? std::string(p) : std::string("50051"));
     std::string target = t && *t ? std::string(t) : default_target;
 
@@ -99,25 +98,55 @@ int main() {
 
     GrpcServer server(addr);
     std::thread server_thread;
-    HailoDevice hailo("device_001");
 
-    if (!init_system(server, server_thread, hailo)) {
+    if (!init_system(server, server_thread)) {
         std::cerr << "Initialization failed, exiting\n";
         return 1;
     }
 
-    // 테스트용 내부 client: 스트리밍 열고 주기적 heartbeat 전송
+    // Load video file (or use camera if VIDEO_PATH not set)
+    const char* vid_env = std::getenv("VIDEO_PATH");
+    std::string video_path = vid_env && *vid_env ? std::string(vid_env) : std::string("test.mp4");
+    cv::VideoCapture cap(video_path);
+    if (!cap.isOpened()) {
+        std::cerr << "[main] Failed to open video: " << video_path << "\n";
+        shutdown_system(server, server_thread);
+        return 1;
+    }
+    std::cerr << "[main] Opened video: " << video_path << "\n";
+
     GrpcClient client(target);
     client.StartStreaming();
 
-    std::cerr << "[main] streaming started to " << target << " — sending heartbeat every 1s\n";
-    while (!g_terminate.load()) {
-        client.SendRequest("heartbeat");
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cerr << "[main] streaming started to " << target << " — sending frames from video\n";
+    cv::Mat frame;
+
+    // main 안 전송 루프 바로 앞에 시작 시간 기록
+    auto t_start = std::chrono::steady_clock::now();
+
+    // 전송 루프 (기존)
+    while (!g_terminate.load() && cap.read(frame)) {
+        if (frame.empty()) break;
+        bool ok = client.SendFrame(frame);
+        if (!ok) {
+            std::cerr << "[main] SendFrame failed, stopping\n";
+            break;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // ~10fps
     }
 
-    std::cerr << "[main] termination requested, stopping client and shutting down server\n";
+    // 루프 종료 후
+    auto t_end = std::chrono::steady_clock::now();
+    double elapsed_sec = std::chrono::duration_cast<std::chrono::duration<double>>(t_end - t_start).count();
+    uint64_t sent = client.GetSentFrames();
+    uint64_t recv = client.GetReceivedResults();
+    double send_fps = elapsed_sec > 0.0 ? (double)sent / elapsed_sec : 0.0;
+    double recv_fps = elapsed_sec > 0.0 ? (double)recv / elapsed_sec : 0.0;
+    std::cerr << "[perf] elapsed=" << elapsed_sec << "s sent=" << sent << " send_fps=" << send_fps
+              << " recv=" << recv << " recv_fps=" << recv_fps << "\n";
+
+    // 기존 정리 코드 호출
     client.StopStreaming();
-    shutdown_system(server, server_thread, hailo);
+    shutdown_system(server, server_thread);
     return 0;
 }

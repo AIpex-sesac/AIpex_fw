@@ -3,7 +3,7 @@
 #include <future>
 #include <iostream>
 
-bool init_system(GrpcServer &server, std::thread &server_thread, HailoDevice &hailo) {
+bool init_system(GrpcServer &server, std::thread &server_thread) {
     std::promise<void> started;
     auto started_fut = started.get_future();
 
@@ -23,26 +23,11 @@ bool init_system(GrpcServer &server, std::thread &server_thread, HailoDevice &ha
     }
 
     // Hailo 초기화
-    if (!hailo.initialize()) {
-        const char* mock_env = std::getenv("HAILO_MOCK");
-        if (mock_env && mock_env[0]) {
-            std::cerr << "Hailo initialize failed, but continuing in MOCK mode\n";
-            // proceed in mock mode
-        } else {
-            std::cerr << "Hailo initialization failed\n";
-            // 실패 시 서버 정리
-            server.Shutdown();
-            if (server_thread.joinable()) server_thread.join();
-            return false;
-        }
-    }
-
     return true;
 }
 
-void shutdown_system(GrpcServer &server, std::thread &server_thread, HailoDevice &hailo) {
+void shutdown_system(GrpcServer &server, std::thread &server_thread) {
     // 역순으로 정리
-    hailo.shutdown();
     server.Shutdown();
     if (server_thread.joinable()) server_thread.join();
 }

@@ -650,26 +650,24 @@ class DetectionResult :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kDetectionsFieldNumber = 2,
+    kJsonFieldNumber = 2,
     kFrameTimestampFieldNumber = 1,
   };
-  // repeated .data_types.BoundingBox detections = 2;
-  int detections_size() const;
+  // string json = 2;
+  void clear_json();
+  const std::string& json() const;
+  void set_json(const std::string& value);
+  void set_json(std::string&& value);
+  void set_json(const char* value);
+  void set_json(const char* value, size_t size);
+  std::string* mutable_json();
+  std::string* release_json();
+  void set_allocated_json(std::string* json);
   private:
-  int _internal_detections_size() const;
+  const std::string& _internal_json() const;
+  void _internal_set_json(const std::string& value);
+  std::string* _internal_mutable_json();
   public:
-  void clear_detections();
-  ::data_types::BoundingBox* mutable_detections(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::data_types::BoundingBox >*
-      mutable_detections();
-  private:
-  const ::data_types::BoundingBox& _internal_detections(int index) const;
-  ::data_types::BoundingBox* _internal_add_detections();
-  public:
-  const ::data_types::BoundingBox& detections(int index) const;
-  ::data_types::BoundingBox* add_detections();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::data_types::BoundingBox >&
-      detections() const;
 
   // .google.protobuf.Timestamp frame_timestamp = 1;
   bool has_frame_timestamp() const;
@@ -691,7 +689,7 @@ class DetectionResult :
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::data_types::BoundingBox > detections_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr json_;
   PROTOBUF_NAMESPACE_ID::Timestamp* frame_timestamp_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_data_5ftypes_2eproto;
@@ -980,6 +978,8 @@ class Command :
     kConfigRequest = 1,
     kControlAction = 2,
     kHeartbeat = 3,
+    kDetectionResult = 4,
+    kCameraFrame = 5,
     COMMAND_TYPE_NOT_SET = 0,
   };
 
@@ -1056,6 +1056,8 @@ class Command :
     kConfigRequestFieldNumber = 1,
     kControlActionFieldNumber = 2,
     kHeartbeatFieldNumber = 3,
+    kDetectionResultFieldNumber = 4,
+    kCameraFrameFieldNumber = 5,
   };
   // .data_types.ConfigRequest config_request = 1;
   bool has_config_request() const;
@@ -1102,6 +1104,36 @@ class Command :
   ::data_types::Heartbeat* _internal_mutable_heartbeat();
   public:
 
+  // .data_types.DetectionResult detection_result = 4;
+  bool has_detection_result() const;
+  private:
+  bool _internal_has_detection_result() const;
+  public:
+  void clear_detection_result();
+  const ::data_types::DetectionResult& detection_result() const;
+  ::data_types::DetectionResult* release_detection_result();
+  ::data_types::DetectionResult* mutable_detection_result();
+  void set_allocated_detection_result(::data_types::DetectionResult* detection_result);
+  private:
+  const ::data_types::DetectionResult& _internal_detection_result() const;
+  ::data_types::DetectionResult* _internal_mutable_detection_result();
+  public:
+
+  // .data_types.CameraFrame camera_frame = 5;
+  bool has_camera_frame() const;
+  private:
+  bool _internal_has_camera_frame() const;
+  public:
+  void clear_camera_frame();
+  const ::data_types::CameraFrame& camera_frame() const;
+  ::data_types::CameraFrame* release_camera_frame();
+  ::data_types::CameraFrame* mutable_camera_frame();
+  void set_allocated_camera_frame(::data_types::CameraFrame* camera_frame);
+  private:
+  const ::data_types::CameraFrame& _internal_camera_frame() const;
+  ::data_types::CameraFrame* _internal_mutable_camera_frame();
+  public:
+
   void clear_command_type();
   CommandTypeCase command_type_case() const;
   // @@protoc_insertion_point(class_scope:data_types.Command)
@@ -1110,6 +1142,8 @@ class Command :
   void set_has_config_request();
   void set_has_control_action();
   void set_has_heartbeat();
+  void set_has_detection_result();
+  void set_has_camera_frame();
 
   inline bool has_command_type() const;
   inline void clear_has_command_type();
@@ -1120,6 +1154,8 @@ class Command :
     ::data_types::ConfigRequest* config_request_;
     ::data_types::ControlAction* control_action_;
     ::data_types::Heartbeat* heartbeat_;
+    ::data_types::DetectionResult* detection_result_;
+    ::data_types::CameraFrame* camera_frame_;
   } command_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
@@ -2542,43 +2578,64 @@ inline void DetectionResult::set_allocated_frame_timestamp(PROTOBUF_NAMESPACE_ID
   // @@protoc_insertion_point(field_set_allocated:data_types.DetectionResult.frame_timestamp)
 }
 
-// repeated .data_types.BoundingBox detections = 2;
-inline int DetectionResult::_internal_detections_size() const {
-  return detections_.size();
+// string json = 2;
+inline void DetectionResult::clear_json() {
+  json_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline int DetectionResult::detections_size() const {
-  return _internal_detections_size();
+inline const std::string& DetectionResult::json() const {
+  // @@protoc_insertion_point(field_get:data_types.DetectionResult.json)
+  return _internal_json();
 }
-inline void DetectionResult::clear_detections() {
-  detections_.Clear();
+inline void DetectionResult::set_json(const std::string& value) {
+  _internal_set_json(value);
+  // @@protoc_insertion_point(field_set:data_types.DetectionResult.json)
 }
-inline ::data_types::BoundingBox* DetectionResult::mutable_detections(int index) {
-  // @@protoc_insertion_point(field_mutable:data_types.DetectionResult.detections)
-  return detections_.Mutable(index);
+inline std::string* DetectionResult::mutable_json() {
+  // @@protoc_insertion_point(field_mutable:data_types.DetectionResult.json)
+  return _internal_mutable_json();
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::data_types::BoundingBox >*
-DetectionResult::mutable_detections() {
-  // @@protoc_insertion_point(field_mutable_list:data_types.DetectionResult.detections)
-  return &detections_;
+inline const std::string& DetectionResult::_internal_json() const {
+  return json_.GetNoArena();
 }
-inline const ::data_types::BoundingBox& DetectionResult::_internal_detections(int index) const {
-  return detections_.Get(index);
+inline void DetectionResult::_internal_set_json(const std::string& value) {
+  
+  json_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline const ::data_types::BoundingBox& DetectionResult::detections(int index) const {
-  // @@protoc_insertion_point(field_get:data_types.DetectionResult.detections)
-  return _internal_detections(index);
+inline void DetectionResult::set_json(std::string&& value) {
+  
+  json_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:data_types.DetectionResult.json)
 }
-inline ::data_types::BoundingBox* DetectionResult::_internal_add_detections() {
-  return detections_.Add();
+inline void DetectionResult::set_json(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  json_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:data_types.DetectionResult.json)
 }
-inline ::data_types::BoundingBox* DetectionResult::add_detections() {
-  // @@protoc_insertion_point(field_add:data_types.DetectionResult.detections)
-  return _internal_add_detections();
+inline void DetectionResult::set_json(const char* value, size_t size) {
+  
+  json_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:data_types.DetectionResult.json)
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::data_types::BoundingBox >&
-DetectionResult::detections() const {
-  // @@protoc_insertion_point(field_list:data_types.DetectionResult.detections)
-  return detections_;
+inline std::string* DetectionResult::_internal_mutable_json() {
+  
+  return json_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* DetectionResult::release_json() {
+  // @@protoc_insertion_point(field_release:data_types.DetectionResult.json)
+  
+  return json_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void DetectionResult::set_allocated_json(std::string* json) {
+  if (json != nullptr) {
+    
+  } else {
+    
+  }
+  json_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), json);
+  // @@protoc_insertion_point(field_set_allocated:data_types.DetectionResult.json)
 }
 
 // -------------------------------------------------------------------
@@ -2957,6 +3014,106 @@ inline ::data_types::Heartbeat* Command::_internal_mutable_heartbeat() {
 inline ::data_types::Heartbeat* Command::mutable_heartbeat() {
   // @@protoc_insertion_point(field_mutable:data_types.Command.heartbeat)
   return _internal_mutable_heartbeat();
+}
+
+// .data_types.DetectionResult detection_result = 4;
+inline bool Command::_internal_has_detection_result() const {
+  return command_type_case() == kDetectionResult;
+}
+inline bool Command::has_detection_result() const {
+  return _internal_has_detection_result();
+}
+inline void Command::set_has_detection_result() {
+  _oneof_case_[0] = kDetectionResult;
+}
+inline void Command::clear_detection_result() {
+  if (_internal_has_detection_result()) {
+    delete command_type_.detection_result_;
+    clear_has_command_type();
+  }
+}
+inline ::data_types::DetectionResult* Command::release_detection_result() {
+  // @@protoc_insertion_point(field_release:data_types.Command.detection_result)
+  if (_internal_has_detection_result()) {
+    clear_has_command_type();
+      ::data_types::DetectionResult* temp = command_type_.detection_result_;
+    command_type_.detection_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::data_types::DetectionResult& Command::_internal_detection_result() const {
+  return _internal_has_detection_result()
+      ? *command_type_.detection_result_
+      : *reinterpret_cast< ::data_types::DetectionResult*>(&::data_types::_DetectionResult_default_instance_);
+}
+inline const ::data_types::DetectionResult& Command::detection_result() const {
+  // @@protoc_insertion_point(field_get:data_types.Command.detection_result)
+  return _internal_detection_result();
+}
+inline ::data_types::DetectionResult* Command::_internal_mutable_detection_result() {
+  if (!_internal_has_detection_result()) {
+    clear_command_type();
+    set_has_detection_result();
+    command_type_.detection_result_ = CreateMaybeMessage< ::data_types::DetectionResult >(
+        GetArenaNoVirtual());
+  }
+  return command_type_.detection_result_;
+}
+inline ::data_types::DetectionResult* Command::mutable_detection_result() {
+  // @@protoc_insertion_point(field_mutable:data_types.Command.detection_result)
+  return _internal_mutable_detection_result();
+}
+
+// .data_types.CameraFrame camera_frame = 5;
+inline bool Command::_internal_has_camera_frame() const {
+  return command_type_case() == kCameraFrame;
+}
+inline bool Command::has_camera_frame() const {
+  return _internal_has_camera_frame();
+}
+inline void Command::set_has_camera_frame() {
+  _oneof_case_[0] = kCameraFrame;
+}
+inline void Command::clear_camera_frame() {
+  if (_internal_has_camera_frame()) {
+    delete command_type_.camera_frame_;
+    clear_has_command_type();
+  }
+}
+inline ::data_types::CameraFrame* Command::release_camera_frame() {
+  // @@protoc_insertion_point(field_release:data_types.Command.camera_frame)
+  if (_internal_has_camera_frame()) {
+    clear_has_command_type();
+      ::data_types::CameraFrame* temp = command_type_.camera_frame_;
+    command_type_.camera_frame_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::data_types::CameraFrame& Command::_internal_camera_frame() const {
+  return _internal_has_camera_frame()
+      ? *command_type_.camera_frame_
+      : *reinterpret_cast< ::data_types::CameraFrame*>(&::data_types::_CameraFrame_default_instance_);
+}
+inline const ::data_types::CameraFrame& Command::camera_frame() const {
+  // @@protoc_insertion_point(field_get:data_types.Command.camera_frame)
+  return _internal_camera_frame();
+}
+inline ::data_types::CameraFrame* Command::_internal_mutable_camera_frame() {
+  if (!_internal_has_camera_frame()) {
+    clear_command_type();
+    set_has_camera_frame();
+    command_type_.camera_frame_ = CreateMaybeMessage< ::data_types::CameraFrame >(
+        GetArenaNoVirtual());
+  }
+  return command_type_.camera_frame_;
+}
+inline ::data_types::CameraFrame* Command::mutable_camera_frame() {
+  // @@protoc_insertion_point(field_mutable:data_types.Command.camera_frame)
+  return _internal_mutable_camera_frame();
 }
 
 inline bool Command::has_command_type() const {

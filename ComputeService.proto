@@ -7,8 +7,4 @@ import "data_types.proto";
 service ComputeService {
     // data_types 패키지의 메시지명을 명시적으로 사용
     rpc Datastream(stream data_types.Command) returns (stream data_types.ServerMessage);
-    
-    // 단발성 제어
-    rpc SetOptions(data_types.Options) returns (data_types.ConfigResponse);
-    rpc GetStatus(data_types.StatusRequest) returns (data_types.DeviceStatus);
 }
