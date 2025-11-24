@@ -1,0 +1,4 @@
+{
+    "threshold": 0.8,
+    "sleep_timeout_sec": 60
+}
