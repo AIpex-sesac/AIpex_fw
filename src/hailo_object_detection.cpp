@@ -188,7 +188,7 @@ int hailo_infer(const cv::Mat& input_frame, bool return_image, std::string& resu
 
     // 7) Postprocess
     // Parse NMS output to get bounding boxes
-    size_t class_count = 80; // COCO dataset has 80 classes (adjust if your model differs)
+    size_t class_count = 4; // COCO dataset has 80 classes (adjust if your model differs)
     auto bboxes = parse_nms_data(output_buffers[0].data(), class_count);
 
     // Filter by threshold

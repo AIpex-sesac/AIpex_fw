@@ -50,6 +50,7 @@ message Command {
         ControlAction control_action = 2;
         Heartbeat heartbeat = 3;
         DetectionResult detection_result = 4;
+        CameraFrame camera_frame = 5; // NEW: client sends frame for inference
     }
 }
 
