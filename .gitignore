@@ -61,3 +61,4 @@ build/
 # User-specific files
 # Add any other files or directories that are specific to your local setup
 # and should not be committed to the repository.
+*.mp4

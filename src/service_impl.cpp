@@ -3,9 +3,38 @@
 #include <csignal>
 #include <chrono>
 #include <opencv2/opencv.hpp>
+// wakeup client
+#include "wakeup.grpc.pb.h"
+#include "wakeup.pb.h"
+#include <grpcpp/grpcpp.h>
 
 // forward declaration from hailo_object_detection.cpp
 extern int hailo_infer(const cv::Mat& input_frame, bool return_image, std::string& result_json, cv::Mat& result_image);
+// Helper: get target from env or use provided default
+static std::string get_wakeup_target_or_default(const std::string& fallback) {
+    const char* wt = std::getenv("WAKEUP_TARGET");
+    if (wt && *wt) return std::string(wt);
+    return fallback;
+}
+static bool send_wakeup_to_target(const std::string &target) {
+    if (target.empty()) return false;
+    auto chan = grpc::CreateChannel(target, grpc::InsecureChannelCredentials());
+    auto stub = wakemeup::WakeUpService::NewStub(chan);
+    wakemeup::WakeUpRequest req;
+    // 필요한 경우 req 필드 설정 (예: req.set_source("server");)
+    wakemeup::WakeUpResponse resp;
+    grpc::ClientContext ctx;
+    grpc::Status s = stub->TriggerScript(&ctx, req, &resp);
+    if (!s.ok()) {
+        std::cerr << "[service] WakeUp RPC failed -> target=" << target << " err=" << s.error_message() << "\n";
+        return false;
+    }
+    std::cerr << "[service] WakeUp RPC success -> target=" << target << "\n";
+    return true;
+}
+
+
+
 
 grpc::Status ComputeServiceImpl::Datastream(::grpc::ServerContext* context,
                                             ::grpc::ServerReaderWriter<data_types::ServerMessage, data_types::Command>* stream) {
@@ -35,10 +64,13 @@ grpc::Status ComputeServiceImpl::Datastream(::grpc::ServerContext* context,
                 // handle reboot
             } else if (action == data_types::ControlAction::START_STREAMING) {
                 std::cerr << "[service] START_STREAMING\n";
+                std::cerr << "[service] START_WAKEUP requested\n";
+                std::string tgt = get_wakeup_target_or_default("192.168.100.59:50050");
+                send_wakeup_to_target(tgt);
             } else if (action == data_types::ControlAction::STOP_STREAMING) {
                 std::cerr << "[service] STOP_STREAMING\n";
                 running.store(false);
-            }
+            } 
         } else if (cmd.has_heartbeat()) {
             std::cerr << "[service] heartbeat received\n";
         } else if (cmd.has_camera_frame()) {
@@ -102,3 +134,6 @@ grpc::Status ComputeServiceImpl::Datastream(::grpc::ServerContext* context,
     std::cerr << "[service] Datastream handler exiting\n";
     return grpc::Status::OK;
 }
+
+// One-shot WakeUp RPC sender.
+// Returns true on success.

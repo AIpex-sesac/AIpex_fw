@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package wakemeup;
+
+service WakeUpService {
+    rpc TriggerScript (WakeUpRequest) returns (WakeUpResponse);
+}
+
+message WakeUpRequest {
+    string script_name = 1;
+    string args = 2;
+}
+
+message WakeUpResponse {
+    bool success = 1;
+    string message = 2;
+    int32 process_id = 3;
+}

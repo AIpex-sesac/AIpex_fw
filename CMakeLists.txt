@@ -43,8 +43,12 @@ set(SRC_FILES
   generated/ComputeService.pb.cc
   generated/ComputeService.grpc.pb.cc
   generated/data_types.pb.cc
+  generated/wakeup.pb.cc
+  generated/wakeup.grpc.pb.cc
   src/config.cpp
   src/hailo_object_detection.cpp
+  src/opencv.cpp
+
 )
 
 add_executable(Aipex ${SRC_FILES})
