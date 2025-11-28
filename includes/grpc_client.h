@@ -5,6 +5,7 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
+#include <opencv2/core/mat.hpp>
 
 class GrpcClient {
 public:
@@ -15,6 +16,8 @@ public:
     bool StartStreaming();
     void StopStreaming();
     bool SendRequest(const std::string& request_data);
+    // send encoded frame (mat will be JPEG-encoded inside)
+    bool SendFrame(const cv::Mat& frame);
 
 private:
     std::shared_ptr<grpc::Channel> channel_;

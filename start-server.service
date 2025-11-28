@@ -1,0 +1,13 @@
+[Unit]
+Description=Start C++ Practice Server on boot
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/home/pi/firm/cpp_practice/build/Aipex
+Restart-on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

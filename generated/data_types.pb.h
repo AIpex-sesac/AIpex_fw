@@ -1510,6 +1510,7 @@ class DetectionResult final : public ::google::protobuf::Message
   enum : int {
     kJsonFieldNumber = 2,
     kFrameTimestampFieldNumber = 1,
+    kCameraIdFieldNumber = 3,
   };
   // string json = 2;
   void clear_json() ;
@@ -1541,11 +1542,21 @@ class DetectionResult final : public ::google::protobuf::Message
   ::google::protobuf::Timestamp* PROTOBUF_NONNULL _internal_mutable_frame_timestamp();
 
   public:
+  // uint32 camera_id = 3;
+  void clear_camera_id() ;
+  ::uint32_t camera_id() const;
+  void set_camera_id(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_camera_id() const;
+  void _internal_set_camera_id(::uint32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:data_types.DetectionResult)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<1, 2,
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
                                    1, 39,
                                    2>
       _table_;
@@ -1569,6 +1580,7 @@ class DetectionResult final : public ::google::protobuf::Message
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr json_;
     ::google::protobuf::Timestamp* PROTOBUF_NULLABLE frame_timestamp_;
+    ::uint32_t camera_id_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -2175,6 +2187,7 @@ class CameraFrame final : public ::google::protobuf::Message
     kTimestampFieldNumber = 4,
     kWidthFieldNumber = 2,
     kHeightFieldNumber = 3,
+    kCameraIdFieldNumber = 6,
   };
   // bytes image_data = 1;
   void clear_image_data() ;
@@ -2241,11 +2254,21 @@ class CameraFrame final : public ::google::protobuf::Message
   void _internal_set_height(::uint32_t value);
 
   public:
+  // uint32 camera_id = 6;
+  void clear_camera_id() ;
+  ::uint32_t camera_id() const;
+  void set_camera_id(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_camera_id() const;
+  void _internal_set_camera_id(::uint32_t value);
+
+  public:
   // @@protoc_insertion_point(class_scope:data_types.CameraFrame)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<3, 5,
+  static const ::google::protobuf::internal::TcParseTable<3, 6,
                                    1, 37,
                                    2>
       _table_;
@@ -2272,6 +2295,7 @@ class CameraFrame final : public ::google::protobuf::Message
     ::google::protobuf::Timestamp* PROTOBUF_NULLABLE timestamp_;
     ::uint32_t width_;
     ::uint32_t height_;
+    ::uint32_t camera_id_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -3154,6 +3178,30 @@ inline void CameraFrame::set_allocated_format(::std::string* PROTOBUF_NULLABLE v
   // @@protoc_insertion_point(field_set_allocated:data_types.CameraFrame.format)
 }
 
+// uint32 camera_id = 6;
+inline void CameraFrame::clear_camera_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.camera_id_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000020u;
+}
+inline ::uint32_t CameraFrame::camera_id() const {
+  // @@protoc_insertion_point(field_get:data_types.CameraFrame.camera_id)
+  return _internal_camera_id();
+}
+inline void CameraFrame::set_camera_id(::uint32_t value) {
+  _internal_set_camera_id(value);
+  _impl_._has_bits_[0] |= 0x00000020u;
+  // @@protoc_insertion_point(field_set:data_types.CameraFrame.camera_id)
+}
+inline ::uint32_t CameraFrame::_internal_camera_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.camera_id_;
+}
+inline void CameraFrame::_internal_set_camera_id(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.camera_id_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // BoundingBox
@@ -3503,6 +3551,30 @@ inline void DetectionResult::set_allocated_json(::std::string* PROTOBUF_NULLABLE
     _impl_.json_.Set("", GetArena());
   }
   // @@protoc_insertion_point(field_set_allocated:data_types.DetectionResult.json)
+}
+
+// uint32 camera_id = 3;
+inline void DetectionResult::clear_camera_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.camera_id_ = 0u;
+  _impl_._has_bits_[0] &= ~0x00000004u;
+}
+inline ::uint32_t DetectionResult::camera_id() const {
+  // @@protoc_insertion_point(field_get:data_types.DetectionResult.camera_id)
+  return _internal_camera_id();
+}
+inline void DetectionResult::set_camera_id(::uint32_t value) {
+  _internal_set_camera_id(value);
+  _impl_._has_bits_[0] |= 0x00000004u;
+  // @@protoc_insertion_point(field_set:data_types.DetectionResult.camera_id)
+}
+inline ::uint32_t DetectionResult::_internal_camera_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.camera_id_;
+}
+inline void DetectionResult::_internal_set_camera_id(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.camera_id_ = value;
 }
 
 // -------------------------------------------------------------------

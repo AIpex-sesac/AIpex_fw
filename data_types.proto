@@ -11,6 +11,7 @@ message CameraFrame {
     uint32 height = 3;
     google.protobuf.Timestamp timestamp = 4;
     string format = 5;
+    uint32 camera_id = 6;
 }
 
 message BoundingBox {
@@ -25,6 +26,7 @@ message BoundingBox {
 message DetectionResult {
     google.protobuf.Timestamp frame_timestamp = 1;
     string json = 2;
+    uint32 camera_id = 3;
 }
 
 message DeviceStatus {

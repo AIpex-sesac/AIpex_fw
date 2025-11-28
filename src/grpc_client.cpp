@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <csignal> // added
+#include <opencv2/opencv.hpp>
 
 class GrpcClient::Impl {
 public:
@@ -120,6 +121,48 @@ public:
         return true;
     }
 
+    // encode cv::Mat to JPEG and send as CameraFrame via Datastream
+    bool SendFrame(const cv::Mat& frame) {
+        if (!running_.load()) {
+            // try to start stream if not running
+            if (!Start()) return false;
+        }
+        if (!stream_) {
+            std::cerr << "[client SendFrame] stream_ is null\n";
+            return false;
+        }
+
+        // encode to JPEG
+        std::vector<uint8_t> buf;
+        std::vector<int> params = {cv::IMWRITE_JPEG_QUALITY, 85};
+        if (!cv::imencode(".jpg", frame, buf, params)) {
+            std::cerr << "[client SendFrame] imencode failed\n";
+            return false;
+        }
+
+        data_types::Command cmd;
+        data_types::CameraFrame cf;
+        cf.set_image_data(reinterpret_cast<const char*>(buf.data()), buf.size());
+        cf.set_width(static_cast<uint32_t>(frame.cols));
+        cf.set_height(static_cast<uint32_t>(frame.rows));
+        cf.set_format("JPEG");
+        // timestamp
+        auto now = std::chrono::system_clock::now();
+        google::protobuf::Timestamp ts;
+        ts.set_seconds(std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count());
+        cf.mutable_timestamp()->CopyFrom(ts);
+        cmd.mutable_camera_frame()->CopyFrom(cf);
+
+        std::lock_guard<std::mutex> lk(writer_mtx_);
+        bool ok = stream_->Write(cmd);
+        if (!ok) {
+            std::cerr << "[client SendFrame] Write returned false -> server likely closed stream\n";
+            running_.store(false);
+            return false;
+        }
+        return true;
+    }
+
 private:
     std::shared_ptr<grpc::Channel> channel_;
     std::unique_ptr<compute::ComputeService::Stub> stub_;
@@ -154,5 +197,10 @@ bool GrpcClient::SendRequest(const std::string& request_data) {
         if (!impl_->Start()) return false;
         return impl_->Send(request_data);
     }
+    return false;
+}
+
+bool GrpcClient::SendFrame(const cv::Mat& frame) {
+    if (impl_) return impl_->SendFrame(frame);
     return false;
 }

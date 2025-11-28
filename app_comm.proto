@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package app_communication;
+
+service AppCommService {
+    rpc SendJSON (JSONRequest) returns (JSONResponse);
+    rpc ReceiveJSON (JSONRequest) returns (JSONResponse);
+}
+
+message JSONRequest {
+    string json_payload = 1;
+}
+
+message JSONResponse {
+    bool success = 1;
+    string message = 2;
+}

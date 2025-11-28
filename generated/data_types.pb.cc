@@ -177,7 +177,8 @@ inline constexpr DetectionResult::Impl_::Impl_(
         json_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        frame_timestamp_{nullptr} {}
+        frame_timestamp_{nullptr},
+        camera_id_{0u} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR DetectionResult::DetectionResult(::_pbi::ConstantInitialized)
@@ -262,7 +263,8 @@ inline constexpr CameraFrame::Impl_::Impl_(
             ::_pbi::ConstantInitialized()),
         timestamp_{nullptr},
         width_{0u},
-        height_{0u} {}
+        height_{0u},
+        camera_id_{0u} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR CameraFrame::CameraFrame(::_pbi::ConstantInitialized)
@@ -345,17 +347,19 @@ const ::uint32_t
         protodesc_cold) = {
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::data_types::CameraFrame, _impl_._has_bits_),
-        8, // hasbit index offset
+        9, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::data_types::CameraFrame, _impl_.image_data_),
         PROTOBUF_FIELD_OFFSET(::data_types::CameraFrame, _impl_.width_),
         PROTOBUF_FIELD_OFFSET(::data_types::CameraFrame, _impl_.height_),
         PROTOBUF_FIELD_OFFSET(::data_types::CameraFrame, _impl_.timestamp_),
         PROTOBUF_FIELD_OFFSET(::data_types::CameraFrame, _impl_.format_),
+        PROTOBUF_FIELD_OFFSET(::data_types::CameraFrame, _impl_.camera_id_),
         0,
         3,
         4,
         2,
         1,
+        5,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::data_types::BoundingBox, _impl_._has_bits_),
         9, // hasbit index offset
@@ -373,11 +377,13 @@ const ::uint32_t
         5,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::data_types::DetectionResult, _impl_._has_bits_),
-        5, // hasbit index offset
+        6, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::data_types::DetectionResult, _impl_.frame_timestamp_),
         PROTOBUF_FIELD_OFFSET(::data_types::DetectionResult, _impl_.json_),
+        PROTOBUF_FIELD_OFFSET(::data_types::DetectionResult, _impl_.camera_id_),
         1,
         0,
+        2,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::data_types::DeviceStatus, _impl_._has_bits_),
         10, // hasbit index offset
@@ -444,16 +450,16 @@ const ::uint32_t
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
         {0, sizeof(::data_types::CameraFrame)},
-        {13, sizeof(::data_types::BoundingBox)},
-        {28, sizeof(::data_types::DetectionResult)},
-        {35, sizeof(::data_types::DeviceStatus)},
-        {52, sizeof(::data_types::Command)},
-        {60, sizeof(::data_types::ConfigRequest)},
-        {67, sizeof(::data_types::ControlAction)},
-        {72, sizeof(::data_types::Heartbeat)},
-        {77, sizeof(::data_types::ServerMessage)},
-        {84, sizeof(::data_types::ClientMessage)},
-        {89, sizeof(::data_types::ConfigResponse)},
+        {15, sizeof(::data_types::BoundingBox)},
+        {30, sizeof(::data_types::DetectionResult)},
+        {39, sizeof(::data_types::DeviceStatus)},
+        {56, sizeof(::data_types::Command)},
+        {64, sizeof(::data_types::ConfigRequest)},
+        {71, sizeof(::data_types::ControlAction)},
+        {76, sizeof(::data_types::Heartbeat)},
+        {81, sizeof(::data_types::ServerMessage)},
+        {88, sizeof(::data_types::ClientMessage)},
+        {93, sizeof(::data_types::ConfigResponse)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::data_types::_CameraFrame_default_instance_._instance,
@@ -472,49 +478,50 @@ const char descriptor_table_protodef_data_5ftypes_2eproto[] ABSL_ATTRIBUTE_SECTI
     protodesc_cold) = {
     "\n\020data_types.proto\022\ndata_types\032\037google/p"
     "rotobuf/timestamp.proto\032\036google/protobuf"
-    "/wrappers.proto\"\177\n\013CameraFrame\022\022\n\nimage_"
-    "data\030\001 \001(\014\022\r\n\005width\030\002 \001(\r\022\016\n\006height\030\003 \001("
-    "\r\022-\n\ttimestamp\030\004 \001(\0132\032.google.protobuf.T"
-    "imestamp\022\016\n\006format\030\005 \001(\t\"l\n\013BoundingBox\022"
-    "\r\n\005x_min\030\001 \001(\r\022\r\n\005y_min\030\002 \001(\r\022\r\n\005x_max\030\003"
-    " \001(\r\022\r\n\005y_max\030\004 \001(\r\022\r\n\005label\030\005 \001(\t\022\022\n\nco"
-    "nfidence\030\006 \001(\002\"T\n\017DetectionResult\0223\n\017fra"
-    "me_timestamp\030\001 \001(\0132\032.google.protobuf.Tim"
-    "estamp\022\014\n\004json\030\002 \001(\t\"\265\002\n\014DeviceStatus\022\021\n"
-    "\tdevice_id\030\001 \001(\t\0227\n\005state\030\002 \001(\0162(.data_t"
-    "ypes.DeviceStatus.ConnectionState\022\031\n\021cpu"
-    "_temperature_c\030\003 \001(\002\022\026\n\016frame_rate_fps\030\004"
-    " \001(\r\022\035\n\025processing_latency_ms\030\005 \001(\r\022\030\n\020f"
-    "irmware_version\030\006 \001(\t\022\023\n\013is_sleeping\030\007 \001"
-    "(\010\"X\n\017ConnectionState\022\020\n\014DISCONNECTED\020\000\022"
-    "\017\n\013BLE_PAIRING\020\001\022\022\n\016WLAN_CONNECTED\020\002\022\016\n\n"
-    "GRPC_READY\020\003\"\231\002\n\007Command\0223\n\016config_reque"
-    "st\030\001 \001(\0132\031.data_types.ConfigRequestH\000\0223\n"
-    "\016control_action\030\002 \001(\0132\031.data_types.Contr"
-    "olActionH\000\022*\n\theartbeat\030\003 \001(\0132\025.data_typ"
-    "es.HeartbeatH\000\0227\n\020detection_result\030\004 \001(\013"
-    "2\033.data_types.DetectionResultH\000\022/\n\014camer"
-    "a_frame\030\005 \001(\0132\027.data_types.CameraFrameH\000"
-    "B\016\n\014command_type\"\202\001\n\rConfigRequest\0228\n\023de"
-    "tection_threshold\030\001 \001(\0132\033.google.protobu"
-    "f.FloatValue\0227\n\021sleep_timeout_sec\030\002 \001(\0132"
-    "\034.google.protobuf.UInt32Value\"\210\001\n\rContro"
-    "lAction\0224\n\006action\030\001 \001(\0162$.data_types.Con"
-    "trolAction.ActionType\"A\n\nActionType\022\n\n\006R"
-    "EBOOT\020\000\022\023\n\017START_STREAMING\020\001\022\022\n\016STOP_STR"
-    "EAMING\020\002\":\n\tHeartbeat\022-\n\ttimestamp\030\001 \001(\013"
-    "2\032.google.protobuf.Timestamp\"\363\001\n\rServerM"
-    "essage\022/\n\014camera_frame\030\001 \001(\0132\027.data_type"
-    "s.CameraFrameH\000\0227\n\020detection_result\030\002 \001("
-    "\0132\033.data_types.DetectionResultH\000\0221\n\rdevi"
-    "ce_status\030\003 \001(\0132\030.data_types.DeviceStatu"
-    "sH\000\0225\n\017config_response\030\004 \001(\0132\032.data_type"
-    "s.ConfigResponseH\000B\016\n\014message_type\"\211\001\n\rC"
-    "lientMessage\0221\n\rdevice_status\030\001 \001(\0132\030.da"
-    "ta_types.DeviceStatusH\000\0225\n\017config_respon"
-    "se\030\002 \001(\0132\032.data_types.ConfigResponseH\000B\016"
-    "\n\014message_type\"2\n\016ConfigResponse\022\017\n\007succ"
-    "ess\030\001 \001(\010\022\017\n\007message\030\002 \001(\tb\006proto3"
+    "/wrappers.proto\"\222\001\n\013CameraFrame\022\022\n\nimage"
+    "_data\030\001 \001(\014\022\r\n\005width\030\002 \001(\r\022\016\n\006height\030\003 \001"
+    "(\r\022-\n\ttimestamp\030\004 \001(\0132\032.google.protobuf."
+    "Timestamp\022\016\n\006format\030\005 \001(\t\022\021\n\tcamera_id\030\006"
+    " \001(\r\"l\n\013BoundingBox\022\r\n\005x_min\030\001 \001(\r\022\r\n\005y_"
+    "min\030\002 \001(\r\022\r\n\005x_max\030\003 \001(\r\022\r\n\005y_max\030\004 \001(\r\022"
+    "\r\n\005label\030\005 \001(\t\022\022\n\nconfidence\030\006 \001(\002\"g\n\017De"
+    "tectionResult\0223\n\017frame_timestamp\030\001 \001(\0132\032"
+    ".google.protobuf.Timestamp\022\014\n\004json\030\002 \001(\t"
+    "\022\021\n\tcamera_id\030\003 \001(\r\"\265\002\n\014DeviceStatus\022\021\n\t"
+    "device_id\030\001 \001(\t\0227\n\005state\030\002 \001(\0162(.data_ty"
+    "pes.DeviceStatus.ConnectionState\022\031\n\021cpu_"
+    "temperature_c\030\003 \001(\002\022\026\n\016frame_rate_fps\030\004 "
+    "\001(\r\022\035\n\025processing_latency_ms\030\005 \001(\r\022\030\n\020fi"
+    "rmware_version\030\006 \001(\t\022\023\n\013is_sleeping\030\007 \001("
+    "\010\"X\n\017ConnectionState\022\020\n\014DISCONNECTED\020\000\022\017"
+    "\n\013BLE_PAIRING\020\001\022\022\n\016WLAN_CONNECTED\020\002\022\016\n\nG"
+    "RPC_READY\020\003\"\231\002\n\007Command\0223\n\016config_reques"
+    "t\030\001 \001(\0132\031.data_types.ConfigRequestH\000\0223\n\016"
+    "control_action\030\002 \001(\0132\031.data_types.Contro"
+    "lActionH\000\022*\n\theartbeat\030\003 \001(\0132\025.data_type"
+    "s.HeartbeatH\000\0227\n\020detection_result\030\004 \001(\0132"
+    "\033.data_types.DetectionResultH\000\022/\n\014camera"
+    "_frame\030\005 \001(\0132\027.data_types.CameraFrameH\000B"
+    "\016\n\014command_type\"\202\001\n\rConfigRequest\0228\n\023det"
+    "ection_threshold\030\001 \001(\0132\033.google.protobuf"
+    ".FloatValue\0227\n\021sleep_timeout_sec\030\002 \001(\0132\034"
+    ".google.protobuf.UInt32Value\"\210\001\n\rControl"
+    "Action\0224\n\006action\030\001 \001(\0162$.data_types.Cont"
+    "rolAction.ActionType\"A\n\nActionType\022\n\n\006RE"
+    "BOOT\020\000\022\023\n\017START_STREAMING\020\001\022\022\n\016STOP_STRE"
+    "AMING\020\002\":\n\tHeartbeat\022-\n\ttimestamp\030\001 \001(\0132"
+    "\032.google.protobuf.Timestamp\"\363\001\n\rServerMe"
+    "ssage\022/\n\014camera_frame\030\001 \001(\0132\027.data_types"
+    ".CameraFrameH\000\0227\n\020detection_result\030\002 \001(\013"
+    "2\033.data_types.DetectionResultH\000\0221\n\rdevic"
+    "e_status\030\003 \001(\0132\030.data_types.DeviceStatus"
+    "H\000\0225\n\017config_response\030\004 \001(\0132\032.data_types"
+    ".ConfigResponseH\000B\016\n\014message_type\"\211\001\n\rCl"
+    "ientMessage\0221\n\rdevice_status\030\001 \001(\0132\030.dat"
+    "a_types.DeviceStatusH\000\0225\n\017config_respons"
+    "e\030\002 \001(\0132\032.data_types.ConfigResponseH\000B\016\n"
+    "\014message_type\"2\n\016ConfigResponse\022\017\n\007succe"
+    "ss\030\001 \001(\010\022\017\n\007message\030\002 \001(\tb\006proto3"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_data_5ftypes_2eproto_deps[2] = {
@@ -525,7 +532,7 @@ static ::absl::once_flag descriptor_table_data_5ftypes_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_data_5ftypes_2eproto = {
     false,
     false,
-    1794,
+    1833,
     descriptor_table_protodef_data_5ftypes_2eproto,
     "data_types.proto",
     &descriptor_table_data_5ftypes_2eproto_once,
@@ -605,9 +612,9 @@ CameraFrame::CameraFrame(
                offsetof(Impl_, width_),
            reinterpret_cast<const char *>(&from._impl_) +
                offsetof(Impl_, width_),
-           offsetof(Impl_, height_) -
+           offsetof(Impl_, camera_id_) -
                offsetof(Impl_, width_) +
-               sizeof(Impl_::height_));
+               sizeof(Impl_::camera_id_));
 
   // @@protoc_insertion_point(copy_constructor:data_types.CameraFrame)
 }
@@ -623,9 +630,9 @@ inline void CameraFrame::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, timestamp_),
            0,
-           offsetof(Impl_, height_) -
+           offsetof(Impl_, camera_id_) -
                offsetof(Impl_, timestamp_) +
-               sizeof(Impl_::height_));
+               sizeof(Impl_::camera_id_));
 }
 CameraFrame::~CameraFrame() {
   // @@protoc_insertion_point(destructor:data_types.CameraFrame)
@@ -684,16 +691,16 @@ CameraFrame::GetClassData() const {
   return CameraFrame_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 5, 1, 37, 2>
+const ::_pbi::TcParseTable<3, 6, 1, 37, 2>
 CameraFrame::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(CameraFrame, _impl_._has_bits_),
     0, // no _extensions_
-    5, 56,  // max_field_number, fast_idx_mask
+    6, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967264,  // skipmap
+    4294967232,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    5,  // num_field_entries
+    6,  // num_field_entries
     1,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     CameraFrame_class_data_.base(),
@@ -719,7 +726,9 @@ CameraFrame::_table_ = {
     // string format = 5;
     {::_pbi::TcParser::FastUS1,
      {42, 1, 0, PROTOBUF_FIELD_OFFSET(CameraFrame, _impl_.format_)}},
-    {::_pbi::TcParser::MiniParse, {}},
+    // uint32 camera_id = 6;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CameraFrame, _impl_.camera_id_), 5>(),
+     {48, 5, 0, PROTOBUF_FIELD_OFFSET(CameraFrame, _impl_.camera_id_)}},
     {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
@@ -739,6 +748,9 @@ CameraFrame::_table_ = {
     // string format = 5;
     {PROTOBUF_FIELD_OFFSET(CameraFrame, _impl_.format_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // uint32 camera_id = 6;
+    {PROTOBUF_FIELD_OFFSET(CameraFrame, _impl_.camera_id_), _Internal::kHasBitsOffset + 5, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::google::protobuf::Timestamp>()},
@@ -769,10 +781,10 @@ PROTOBUF_NOINLINE void CameraFrame::Clear() {
       _impl_.timestamp_->Clear();
     }
   }
-  if ((cached_has_bits & 0x00000018u) != 0) {
+  if ((cached_has_bits & 0x00000038u) != 0) {
     ::memset(&_impl_.width_, 0, static_cast<::size_t>(
-        reinterpret_cast<char*>(&_impl_.height_) -
-        reinterpret_cast<char*>(&_impl_.width_)) + sizeof(_impl_.height_));
+        reinterpret_cast<char*>(&_impl_.camera_id_) -
+        reinterpret_cast<char*>(&_impl_.width_)) + sizeof(_impl_.camera_id_));
   }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
@@ -837,6 +849,15 @@ PROTOBUF_NOINLINE void CameraFrame::Clear() {
     }
   }
 
+  // uint32 camera_id = 6;
+  if ((cached_has_bits & 0x00000020u) != 0) {
+    if (this_._internal_camera_id() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+          6, this_._internal_camera_id(), target);
+    }
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -862,7 +883,7 @@ PROTOBUF_NOINLINE void CameraFrame::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x0000001fu) != 0) {
+  if ((cached_has_bits & 0x0000003fu) != 0) {
     // bytes image_data = 1;
     if ((cached_has_bits & 0x00000001u) != 0) {
       if (!this_._internal_image_data().empty()) {
@@ -896,6 +917,13 @@ PROTOBUF_NOINLINE void CameraFrame::Clear() {
             this_._internal_height());
       }
     }
+    // uint32 camera_id = 6;
+    if ((cached_has_bits & 0x00000020u) != 0) {
+      if (this_._internal_camera_id() != 0) {
+        total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+            this_._internal_camera_id());
+      }
+    }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
                                              &this_._impl_._cached_size_);
@@ -911,7 +939,7 @@ void CameraFrame::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
   (void) cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x0000001fu) != 0) {
+  if ((cached_has_bits & 0x0000003fu) != 0) {
     if ((cached_has_bits & 0x00000001u) != 0) {
       if (!from._internal_image_data().empty()) {
         _this->_internal_set_image_data(from._internal_image_data());
@@ -948,6 +976,11 @@ void CameraFrame::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
         _this->_impl_.height_ = from._impl_.height_;
       }
     }
+    if ((cached_has_bits & 0x00000020u) != 0) {
+      if (from._internal_camera_id() != 0) {
+        _this->_impl_.camera_id_ = from._impl_.camera_id_;
+      }
+    }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
@@ -970,8 +1003,8 @@ void CameraFrame::InternalSwap(CameraFrame* PROTOBUF_RESTRICT PROTOBUF_NONNULL o
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.image_data_, &other->_impl_.image_data_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.format_, &other->_impl_.format_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CameraFrame, _impl_.height_)
-      + sizeof(CameraFrame::_impl_.height_)
+      PROTOBUF_FIELD_OFFSET(CameraFrame, _impl_.camera_id_)
+      + sizeof(CameraFrame::_impl_.camera_id_)
       - PROTOBUF_FIELD_OFFSET(CameraFrame, _impl_.timestamp_)>(
           reinterpret_cast<char*>(&_impl_.timestamp_),
           reinterpret_cast<char*>(&other->_impl_.timestamp_));
@@ -1454,6 +1487,7 @@ DetectionResult::DetectionResult(
   _impl_.frame_timestamp_ = ((cached_has_bits & 0x00000002u) != 0)
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.frame_timestamp_)
                 : nullptr;
+  _impl_.camera_id_ = from._impl_.camera_id_;
 
   // @@protoc_insertion_point(copy_constructor:data_types.DetectionResult)
 }
@@ -1465,7 +1499,12 @@ PROTOBUF_NDEBUG_INLINE DetectionResult::Impl_::Impl_(
 
 inline void DetectionResult::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.frame_timestamp_ = {};
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, frame_timestamp_),
+           0,
+           offsetof(Impl_, camera_id_) -
+               offsetof(Impl_, frame_timestamp_) +
+               sizeof(Impl_::camera_id_));
 }
 DetectionResult::~DetectionResult() {
   // @@protoc_insertion_point(destructor:data_types.DetectionResult)
@@ -1523,16 +1562,16 @@ DetectionResult::GetClassData() const {
   return DetectionResult_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 1, 39, 2>
+const ::_pbi::TcParseTable<2, 3, 1, 39, 2>
 DetectionResult::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(DetectionResult, _impl_._has_bits_),
     0, // no _extensions_
-    2, 8,  // max_field_number, fast_idx_mask
+    3, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
+    4294967288,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
+    3,  // num_field_entries
     1,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     DetectionResult_class_data_.base(),
@@ -1542,12 +1581,16 @@ DetectionResult::_table_ = {
     ::_pbi::TcParser::GetTable<::data_types::DetectionResult>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string json = 2;
-    {::_pbi::TcParser::FastUS1,
-     {18, 0, 0, PROTOBUF_FIELD_OFFSET(DetectionResult, _impl_.json_)}},
+    {::_pbi::TcParser::MiniParse, {}},
     // .google.protobuf.Timestamp frame_timestamp = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 1, 0, PROTOBUF_FIELD_OFFSET(DetectionResult, _impl_.frame_timestamp_)}},
+    // string json = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 0, 0, PROTOBUF_FIELD_OFFSET(DetectionResult, _impl_.json_)}},
+    // uint32 camera_id = 3;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(DetectionResult, _impl_.camera_id_), 2>(),
+     {24, 2, 0, PROTOBUF_FIELD_OFFSET(DetectionResult, _impl_.camera_id_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -1557,6 +1600,9 @@ DetectionResult::_table_ = {
     // string json = 2;
     {PROTOBUF_FIELD_OFFSET(DetectionResult, _impl_.json_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // uint32 camera_id = 3;
+    {PROTOBUF_FIELD_OFFSET(DetectionResult, _impl_.camera_id_), _Internal::kHasBitsOffset + 2, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::google::protobuf::Timestamp>()},
@@ -1584,6 +1630,7 @@ PROTOBUF_NOINLINE void DetectionResult::Clear() {
       _impl_.frame_timestamp_->Clear();
     }
   }
+  _impl_.camera_id_ = 0u;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -1621,6 +1668,15 @@ PROTOBUF_NOINLINE void DetectionResult::Clear() {
     }
   }
 
+  // uint32 camera_id = 3;
+  if ((cached_has_bits & 0x00000004u) != 0) {
+    if (this_._internal_camera_id() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+          3, this_._internal_camera_id(), target);
+    }
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -1646,7 +1702,7 @@ PROTOBUF_NOINLINE void DetectionResult::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000003u) != 0) {
+  if ((cached_has_bits & 0x00000007u) != 0) {
     // string json = 2;
     if ((cached_has_bits & 0x00000001u) != 0) {
       if (!this_._internal_json().empty()) {
@@ -1658,6 +1714,13 @@ PROTOBUF_NOINLINE void DetectionResult::Clear() {
     if ((cached_has_bits & 0x00000002u) != 0) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.frame_timestamp_);
+    }
+    // uint32 camera_id = 3;
+    if ((cached_has_bits & 0x00000004u) != 0) {
+      if (this_._internal_camera_id() != 0) {
+        total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+            this_._internal_camera_id());
+      }
     }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
@@ -1674,7 +1737,7 @@ void DetectionResult::MergeImpl(::google::protobuf::MessageLite& to_msg, const :
   (void) cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000003u) != 0) {
+  if ((cached_has_bits & 0x00000007u) != 0) {
     if ((cached_has_bits & 0x00000001u) != 0) {
       if (!from._internal_json().empty()) {
         _this->_internal_set_json(from._internal_json());
@@ -1690,6 +1753,11 @@ void DetectionResult::MergeImpl(::google::protobuf::MessageLite& to_msg, const :
         _this->_impl_.frame_timestamp_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.frame_timestamp_);
       } else {
         _this->_impl_.frame_timestamp_->MergeFrom(*from._impl_.frame_timestamp_);
+      }
+    }
+    if ((cached_has_bits & 0x00000004u) != 0) {
+      if (from._internal_camera_id() != 0) {
+        _this->_impl_.camera_id_ = from._impl_.camera_id_;
       }
     }
   }
@@ -1712,7 +1780,12 @@ void DetectionResult::InternalSwap(DetectionResult* PROTOBUF_RESTRICT PROTOBUF_N
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.json_, &other->_impl_.json_, arena);
-  swap(_impl_.frame_timestamp_, other->_impl_.frame_timestamp_);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(DetectionResult, _impl_.camera_id_)
+      + sizeof(DetectionResult::_impl_.camera_id_)
+      - PROTOBUF_FIELD_OFFSET(DetectionResult, _impl_.frame_timestamp_)>(
+          reinterpret_cast<char*>(&_impl_.frame_timestamp_),
+          reinterpret_cast<char*>(&other->_impl_.frame_timestamp_));
 }
 
 ::google::protobuf::Metadata DetectionResult::GetMetadata() const {
