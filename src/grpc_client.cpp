@@ -15,46 +15,77 @@
 // Helper: parse simple arrays [x,y,w,h] or [x,y,w,h,score] in JSON-like string
 static std::vector<GrpcClient::BBox> parse_bboxes_from_json(const std::string& s) {
     std::vector<GrpcClient::BBox> res;
-    // regex to extract each detection object (simple approach without full JSON library)
-    // pattern: look for "class":"<label>", "score":<float>, "bbox":{...}, x_min/y_min/x_max/y_max
-    // We'll iterate looking for "bbox" objects, extracting x_min, y_min, x_max, y_max, and also try to find corresponding class/score nearby
-    
-    // First: find all bbox blocks: {"x_min":<num>,"y_min":<num>,"x_max":<num>,"y_max":<num>}
-    std::regex bbox_re(R"("x_min"\s*:\s*([-+]?[0-9]*\.?[0-9]+)\s*,\s*"y_min"\s*:\s*([-+]?[0-9]*\.?[0-9]+)\s*,\s*"x_max"\s*:\s*([-+]?[0-9]*\.?[0-9]+)\s*,\s*"y_max"\s*:\s*([-+]?[0-9]*\.?[0-9]+))");
-    std::smatch m;
-    std::string::const_iterator start = s.cbegin();
-    while (std::regex_search(start, s.cend(), m, bbox_re)) {
-        try {
-            GrpcClient::BBox b;
-            float x_min = std::stof(m[1].str());
-            float y_min = std::stof(m[2].str());
-            float x_max = std::stof(m[3].str());
-            float y_max = std::stof(m[4].str());
-            // normalize: x/y/w/h in [0..1]
-            b.x = x_min;
-            b.y = y_min;
-            b.w = x_max - x_min;
-            b.h = y_max - y_min;
+    if (s.empty()) return res;
 
-            // Try to find "class" and "score" nearby (search backwards/forwards from match)
-            // naive: look for "class":"<word>", "score":<float> within same detection object (rough heuristic)
-            std::string context = s.substr(std::max(0, (int)(m.position() - 200)), 400);
-            std::regex class_re(R"delim("class"\s*:\s*"([^"]+)")delim");
-            std::smatch cm;
-            if (std::regex_search(context, cm, class_re)) {
-                b.label = cm[1].str();
-            }
-            std::regex score_re(R"("score"\s*:\s*([-+]?[0-9]*\.?[0-9]+))");
-            std::smatch sm;
-            if (std::regex_search(context, sm, score_re)) {
-                b.score = std::stof(sm[1].str());
+    try {
+        // 1) Find detection objects that contain a "bbox" block
+        std::regex det_re("\\{[^{}]*\"bbox\"\\s*:\\s*\\{[^{}]*\\}[^{}]*\\}");
+        std::smatch dm;
+        std::string::const_iterator start = s.cbegin();
+        while (std::regex_search(start, s.cend(), dm, det_re)) {
+            std::string det_block = dm.str();
+            GrpcClient::BBox b{};
+            std::smatch m;
+
+            // try x_min,y_min,x_max,y_max
+            std::regex rxmin("\"x_min\"\\s*:\\s*([-+]?[0-9]*\\.?[0-9]+)");
+            std::regex rymin("\"y_min\"\\s*:\\s*([-+]?[0-9]*\\.?[0-9]+)");
+            std::regex rxmax("\"x_max\"\\s*:\\s*([-+]?[0-9]*\\.?[0-9]+)");
+            std::regex rymax("\"y_max\"\\s*:\\s*([-+]?[0-9]*\\.?[0-9]+)");
+            if (std::regex_search(det_block, m, rxmin)) b.x = std::stof(m[1].str());
+            if (std::regex_search(det_block, m, rymin)) b.y = std::stof(m[1].str());
+            float x_max = 0.0f, y_max = 0.0f;
+            if (std::regex_search(det_block, m, rxmax)) x_max = std::stof(m[1].str());
+            if (std::regex_search(det_block, m, rymax)) y_max = std::stof(m[1].str());
+            if (x_max > 0.0f) b.w = x_max - b.x;
+            if (y_max > 0.0f) b.h = y_max - b.y;
+
+            // try bbox as array inside object: "bbox":[x,y,w,h]
+            if ((b.w <= 0.0f || b.h <= 0.0f)) {
+                std::regex bbox_arr("\"bbox\"\\s*:\\s*\\[\\s*([-+]?[0-9]*\\.?[0-9]+)\\s*,\\s*([-+]?[0-9]*\\.?[0-9]+)\\s*,\\s*([-+]?[0-9]*\\.?[0-9]+)\\s*,\\s*([-+]?[0-9]*\\.?[0-9]+)");
+                if (std::regex_search(det_block, m, bbox_arr)) {
+                    b.x = std::stof(m[1].str());
+                    b.y = std::stof(m[2].str());
+                    b.w = std::stof(m[3].str());
+                    b.h = std::stof(m[4].str());
+                }
             }
 
-            res.push_back(b);
-        } catch(...) {
-            // ignore parse errors
+            // class & score
+            std::regex class_re("\"class\"\\s*:\\s*\"([^\"]+)\"");
+            if (std::regex_search(det_block, m, class_re)) b.label = m[1].str();
+            std::regex score_re("\"score\"\\s*:\\s*([-+]?[0-9]*\\.?[0-9]+)");
+            if (std::regex_search(det_block, m, score_re)) b.score = std::stof(m[1].str());
+
+            // push if valid
+            if (b.w > 0.0f && b.h > 0.0f) {
+                // clamp reasonable normalized values (if they look normalized)
+                if (b.x < 0.0f) b.x = 0.0f;
+                if (b.y < 0.0f) b.y = 0.0f;
+                res.push_back(b);
+            }
+
+            start = dm.suffix().first;
         }
-        start = m.suffix().first;
+
+        // 2) Fallback: find any [x,y,w,h] arrays anywhere (multiple)
+        if (res.empty()) {
+            std::regex arr_re("\\[\\s*([-+]?[0-9]*\\.?[0-9]+)\\s*,\\s*([-+]?[0-9]*\\.?[0-9]+)\\s*,\\s*([-+]?[0-9]*\\.?[0-9]+)\\s*,\\s*([-+]?[0-9]*\\.?[0-9]+)(?:\\s*,\\s*([-+]?[0-9]*\\.?[0-9]+))?\\s*\\]");
+            std::smatch am;
+            start = s.cbegin();
+            while (std::regex_search(start, s.cend(), am, arr_re)) {
+                GrpcClient::BBox b{};
+                b.x = std::stof(am[1].str());
+                b.y = std::stof(am[2].str());
+                b.w = std::stof(am[3].str());
+                b.h = std::stof(am[4].str());
+                if (am.size() > 5 && am[5].matched) b.score = std::stof(am[5].str());
+                if (b.w > 0.0f && b.h > 0.0f) res.push_back(b);
+                start = am.suffix().first;
+            }
+        }
+    } catch (...) {
+        // best-effort: return whatever parsed so far
     }
     return res;
 }
@@ -66,23 +97,26 @@ public:
         sent_frames_(0), received_results_(0)
     {}
 
-    ~Impl() { Stop(); }
-
+    // Start the bi-directional stream and reader thread
     bool Start() {
+        // already running?
         if (running_.exchange(true)) return true;
-        std::cerr << "[client] Start(): waiting for channel connectivity\n";
-        auto deadline = std::chrono::system_clock::now() + std::chrono::seconds(5);
-        if (!channel_->WaitForConnected(deadline)) {
-            std::cerr << "[client] channel failed to become READY within 5s, state="
-                      << channel_->GetState(true) << "\n";
-            running_ = false;
-            return false;
-        }
+
+        // create context and stream
         context_ = std::make_unique<grpc::ClientContext>();
         stream_ = stub_->Datastream(context_.get());
+        if (!stream_) {
+            std::cerr << "[client] Failed to create Datastream\n";
+            running_.store(false);
+            return false;
+        }
+
+        // launch reader thread
         reader_thread_ = std::thread(&Impl::ReaderLoop, this);
         return true;
     }
+    
+    ~Impl() { Stop(); }
 
     void ReaderLoop() {
         data_types::ServerMessage sm;
@@ -146,6 +180,23 @@ public:
                     det_cv_.notify_one();
                 } else {
                     std::cerr << "[client] no boxes parsed from detection_result\n";
+                }
+            }
+
+            // camera_frame 수신 처리: image_data는 JPEG 바이트(예상)
+            if (sm.has_camera_frame()) {
+                const auto &cf = sm.camera_frame();
+                const std::string &imgdata = cf.image_data();
+                if (!imgdata.empty()) {
+                    std::vector<uchar> buf(imgdata.begin(), imgdata.end());
+                    cv::Mat img = cv::imdecode(buf, cv::IMREAD_COLOR);
+                    if (!img.empty()) {
+                        std::lock_guard<std::mutex> lk(frame_mtx_);
+                        frame_queue_.push_back(img);
+                        if (frame_queue_.size() > 4) frame_queue_.erase(frame_queue_.begin()); // bounded
+                    } else {
+                        std::cerr << "[client] camera_frame imdecode failed\n";
+                    }
                 }
             }
 
@@ -271,6 +322,15 @@ public:
         return out;
     }
 
+    // Pop one remote frame (thread-safe)
+    bool PopRemoteFrame(cv::Mat &out) {
+        std::lock_guard<std::mutex> lk(frame_mtx_);
+        if (frame_queue_.empty()) return false;
+        out = frame_queue_.front();
+        frame_queue_.erase(frame_queue_.begin());
+        return true;
+    }
+
     uint64_t GetSentFrames() const { return sent_frames_.load(std::memory_order_relaxed); }
     uint64_t GetReceivedResults() const { return received_results_.load(std::memory_order_relaxed); }
 
@@ -290,6 +350,10 @@ public:
     std::mutex det_mtx_;
     std::condition_variable det_cv_;
     std::vector<Detection> det_queue_;
+
+    // frame queue
+    std::mutex frame_mtx_;
+    std::vector<cv::Mat> frame_queue_;
 };
 
 // --- forwarding implementations ---
@@ -312,3 +376,4 @@ uint64_t GrpcClient::GetReceivedResults() { return impl_ ? impl_->GetReceivedRes
 std::vector<GrpcClient::Detection> GrpcClient::PopDetections() {
     return impl_ ? impl_->PopDetections() : std::vector<Detection>{};
 }
+bool GrpcClient::PopRemoteFrame(cv::Mat &out) { return impl_ ? impl_->PopRemoteFrame(out) : false; }

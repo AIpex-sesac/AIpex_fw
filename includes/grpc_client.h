@@ -8,7 +8,6 @@
 #include <vector>
 
 namespace cv { class Mat; }
-
 class GrpcClient {
 public:
     explicit GrpcClient(const std::string& server_address);
@@ -41,6 +40,8 @@ public:
 
     // pop all pending detection messages (thread-safe)
     std::vector<Detection> PopDetections();
+    // Pop one remote frame (thread-safe). returns true and fills out if a frame available.
+    bool PopRemoteFrame(cv::Mat &out);
 
 private:
     std::shared_ptr<grpc::Channel> channel_;

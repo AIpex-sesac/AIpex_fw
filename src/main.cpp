@@ -114,6 +114,8 @@ int main() {
         return 1;
     }
     std::cerr << "[main] Opened video: " << video_path << "\n";
+    // make preview window autosize (show incoming frame at its own size)
+    cv::namedWindow("Aipex Preview", cv::WINDOW_AUTOSIZE);
     // Get video FPS and calculate frame delay
     double video_fps = cap.get(cv::CAP_PROP_FPS);
     if (video_fps <= 0) video_fps = 30.0; // fallback
@@ -144,46 +146,93 @@ int main() {
         cv::resize(frame_rotated, frame_resized, cv::Size(target_size, target_size));
         
         bool ok = client.SendFrame(frame_resized);
-        if (!ok) {
-            std::cerr << "[main] SendFrame failed, stopping\n";
-            break;
-        }
+        if (!ok) break;
 
-        // 수신된 detection 결과가 있으면 화면에 그림
+        // 색상 맵 및 텍스트/두께 스케일링 헬퍼 (전송 루프 바로 위에 위치)
+        std::map<std::string, cv::Scalar> class_colors = {
+            {"person", cv::Scalar(0, 0, 255)},   // red (BGR)
+            {"car",    cv::Scalar(0, 255, 0)},   // green
+            {"bike",   cv::Scalar(255, 0, 0)}    // blue
+        };
+        auto pick_color = [&](const std::string &label)->cv::Scalar{
+            auto it = class_colors.find(label);
+            if (it != class_colors.end()) return it->second;
+            return cv::Scalar(0, 255, 255); // default: yellow
+        };
+        
+        // Stable bbox drawer: map normalized coords directly to display image pixels.
+        // Use thicker font and anti-aliased drawing for 가독성.
+        auto draw_bbox_on = [&](cv::Mat &img, const GrpcClient::BBox &b){
+            const int img_w = img.cols;
+            const int img_h = img.rows;
+
+            // Map normalized coords directly to displayed image pixels
+            int fx = static_cast<int>(std::round(b.x * img_w));
+            int fy = static_cast<int>(std::round(b.y * img_h));
+            int fw = static_cast<int>(std::round(b.w * img_w));
+            int fh = static_cast<int>(std::round(b.h * img_h));
+
+            // clamp/ensure minimum visible size
+            fx = std::clamp(fx, 0, img_w - 1);
+            fy = std::clamp(fy, 0, img_h - 1);
+            if (fw < 2) fw = std::max(2, img_w / 200);
+            if (fh < 2) fh = std::max(2, img_h / 200);
+            if (fx + fw > img_w) fw = img_w - fx;
+            if (fy + fh > img_h) fh = img_h - fy;
+
+            // visual params: scale by min dimension to keep proportions stable
+            double scale = std::max(1.0, static_cast<double>(std::min(img_w, img_h)) / 640.0);
+            int thickness = std::max(2, static_cast<int>(std::round(2.0 * scale)));
+            double font_scale = 0.9 * scale;
+
+            cv::Scalar color = pick_color(b.label);
+            cv::rectangle(img, cv::Rect(fx, fy, fw, fh), color, thickness, cv::LINE_AA);
+
+            std::ostringstream ss;
+            if (!b.label.empty()) ss << b.label << " ";
+            ss << std::fixed << std::setprecision(2) << b.score;
+            std::string text = ss.str();
+
+            int baseline = 0;
+            cv::Size tsize = cv::getTextSize(text, cv::FONT_HERSHEY_COMPLEX, font_scale, std::max(1, thickness/2), &baseline);
+            int tx = fx;
+            int ty = std::max(0, fy - tsize.height - 6);
+            if (tx + tsize.width + 6 > img_w) tx = std::max(0, img_w - tsize.width - 6);
+
+            cv::rectangle(img, cv::Point(tx, ty), cv::Point(tx + tsize.width + 6, ty + tsize.height + 6), color, cv::FILLED, cv::LINE_AA);
+            cv::putText(img, text, cv::Point(tx + 3, ty + tsize.height + 1), cv::FONT_HERSHEY_COMPLEX, font_scale, cv::Scalar(255,255,255), std::max(1, thickness/2), cv::LINE_AA);
+        };
+
+        // 수신된 디텍션을 한 번만 꺼냄 (동일 루프에서 재사용)
         auto dets = client.PopDetections();
-        int total_boxes = 0;
-        for (const auto &det : dets) {
-            total_boxes += det.boxes.size();
-            for (const auto &b : det.boxes) {
-                // b.x/y/w/h are normalized (0..1) in rotated space. convert to pixel coords of ROTATED frame
-                int fx = static_cast<int>(std::round(b.x * frame_rotated.cols));
-                int fy = static_cast<int>(std::round(b.y * frame_rotated.rows));
-                int fw = static_cast<int>(std::round(b.w * frame_rotated.cols));
-                int fh = static_cast<int>(std::round(b.h * frame_rotated.rows));
+        // debug logs intentionally suppressed for cleaner output
 
-                // clamp and guard against negative / out-of-range
-                if (fw < 1) fw = 1;
-                if (fh < 1) fh = 1;
-                if (fx < 0) fx = 0;
-                if (fy < 0) fy = 0;
-                if (fx + fw > frame_rotated.cols) fw = frame_rotated.cols - fx;
-                if (fy + fh > frame_rotated.rows) fh = frame_rotated.rows - fy;
-
-                cv::Rect r(fx, fy, fw, fh);
-                cv::rectangle(frame_rotated, r, cv::Scalar(0, 255, 0), 2);
-                std::ostringstream oss;
-                if (!b.label.empty()) oss << b.label << " ";
-                oss << std::fixed << std::setprecision(2) << b.score;
-                cv::putText(frame_rotated, oss.str(), cv::Point(fx, std::max(0, fy - 6)),
-                            cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,255,0), 1);
+         // 서버가 포워딩한 프레임이 있으면 그걸 우선 표시
+         cv::Mat remote_frame;
+        if (client.PopRemoteFrame(remote_frame)) {
+            // Show remote frame at its native size (incoming 크기). draw on a copy.
+            cv::Mat disp = remote_frame.clone();
+            for (const auto &det : dets) for (const auto &b : det.boxes) draw_bbox_on(disp, b);
+            cv::imshow("Aipex Preview", disp);
+        } else {
+            // Local frame: shrink if too large for comfortable viewing while preserving aspect
+            const int max_w = 1280;
+            const int max_h = 720;
+            cv::Mat disp;
+            double sx = static_cast<double>(frame_rotated.cols) / max_w;
+            double sy = static_cast<double>(frame_rotated.rows) / max_h;
+            double max_scale = std::max(1.0, std::max(sx, sy));
+            if (max_scale > 1.0) {
+                int nw = static_cast<int>(std::round(frame_rotated.cols / max_scale));
+                int nh = static_cast<int>(std::round(frame_rotated.rows / max_scale));
+                cv::resize(frame_rotated, disp, cv::Size(nw, nh), 0, 0, cv::INTER_LINEAR);
+            } else {
+                disp = frame_rotated.clone();
             }
+            for (const auto &det : dets) for (const auto &b : det.boxes) draw_bbox_on(disp, b);
+            cv::imshow("Aipex Preview", disp);
         }
-        // overlay total boxes count on top-left
-        std::string info = "Dets: " + std::to_string(total_boxes);
-        cv::putText(frame_rotated, info, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 0), 2);
 
-        // show
-        cv::imshow("Aipex Preview", frame_rotated);
         int key = cv::waitKey(1);
         if (key == 'w' || key == 'W') {
             std::cerr << "[main] key 'w' pressed -> sending START_STREAMING command\n";
