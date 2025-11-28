@@ -106,6 +106,10 @@ grpc::Status ComputeServiceImpl::Datastream(::grpc::ServerContext* context,
                 }
             }
         }
+
+    if (forward_client) {
+        forward_client->StopStreaming();
+        forward_client.reset();
     }
 
     std::cerr << "[service] Datastream handler exiting\n";
