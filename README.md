@@ -33,7 +33,7 @@
 4. 실행
     ```
     cd /path/to/repository/build/
-  ./AipexFW
+    ./AipexFW
     ```
 
 ### 코드 구조
